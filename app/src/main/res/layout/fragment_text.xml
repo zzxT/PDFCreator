@@ -1,0 +1,64 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:src="@drawable/ic_file_pdf_box_white_48dp"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="false"
+        android:layout_marginBottom="@dimen/fab_margin" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/editText"
+        android:hint="@string/add_text_hint"
+        android:layout_alignParentStart="false"
+        android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
+        android:layout_above="@+id/fab"
+        android:layout_margin="@dimen/fab_margin" />
+
+    <ImageButton
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:id="@+id/imageButton_1"
+        android:src="@drawable/ic_file_pdf_white_48dp"
+        android:scaleType="fitCenter"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_below="@+id/imageButton_3"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="4dp" />
+
+    <ImageButton
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:id="@+id/imageButton_2"
+        android:scaleType="fitCenter"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:src="@drawable/ic_delete_white_48dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:layout_marginBottom="4dp" />
+
+    <ImageButton
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:id="@+id/imageButton_3"
+        android:scaleType="fitCenter"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:src="@drawable/ic_call_merge_white_48dp"
+        android:layout_below="@+id/imageButton_2"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="4dp" />
+
+</RelativeLayout>

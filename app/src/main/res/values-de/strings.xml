@@ -1,0 +1,58 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <string name="app_name">PDF Creator</string>
+    <string name="app_title">Bitte Titel eingeben. Beginnt mit:</string>
+    <string name="app_title_edit">Bild bearbeiten</string>
+    <string name="app_title_crop" tools:keep="@string/app_title_crop">Bild zuschneiden</string>
+    <string name="app_hint">yyyy-MM-dd_[dein Titel]</string>
+    <string name="app_permissions">Du musst der App Zugriff auf den Gerätespeicher gewähren, damit PDF-Dateien
+        gespeichert werden können. Danach solltest du die Anwendung komplett schließen oder das Telefon neu starten.
+        Wenn du den Zugriff verweigerst und die Funktion später doch nutzen willst, kannst du die Berechtigung
+        nachträglich erteilen. Öffne dafür: Systemeinstellungen - Apps - Wetter. Im Bereich Berechtigungen kannst
+        dann die entsprechende Einstellung vornehmen.</string>
+    <string name="action_share">PDF teilen</string>
+    <string name="action_open">PDF öffnen</string>
+    <string name="action_folder">Öffne Anwendungsordner</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="action_share_with">PDF teilen mit:</string>
+
+    <string name="create_image">Bild zu PDF</string>
+    <string name="create_text">Text zu PDF</string>
+    <string name="add_image">+ Bild</string>
+    <string name="add_text" tools:ignore="TypographyEllipsis">+ Text | ...</string>
+    <string name="add_text_hint">Text Schreiben oder einfügen</string>
+    <string name="add_text_hint2">Welche Seiten möchtest du behalten?</string>
+
+    <string name="toast_yes">OK</string>
+    <string name="toast_cancel">Abbrechen</string>
+    <string name="toast_successfully">PDF erfolgreich erstellt.</string>
+    <string name="toast_successfully_not">Beim erstellen der PDF-Datei ist ein Fehler passiert.</string>
+    <string name="toast_open">Öffnen?</string>
+    <string name="toast_install_pdf">Bitte einen PDF Reader installieren.</string>
+    <string name="toast_install_folder">Bitte einen Dateimanager installieren..</string>
+    <string name="toast_noImage">Kein Bild vorhanden.</string>
+    <string name="toast_savedImage">Bitte warten. Bild wird gespeichert.</string>
+
+    <string name="goal_gallery">Aus der Galerie aussuchen (JPEG)</string>
+    <string name="goal_gallery2">Aus der Galerie aussuchen (PNG)</string>
+    <string name="goal_camera">Foto aufnehmen</string>
+    <string name="goal_cancel">Abbrechen</string>
+
+    <string name="filter_1">Kontrast</string>
+    <string name="filter_2">Farbwert</string>
+    <string name="filter_3">Helligkeit</string>
+    <string name="filter_4">Schärfe</string>
+    <string name="filter_5">Sättigung</string>
+
+    <string name="filter_6">Belichtung</string>
+    <string name="filter_7">Schatten hervorheben</string>
+    <string name="filter_8">Weißabgleich</string>
+    <string name="filter_9">Farbkorrektur</string>
+    <string name="filter_10">Mitten ausgleichen</string>
+
+    <string name="settings_prefApp">About the app</string>
+
+    <string name="pref_license">Lizenz</string>
+    <string name="pref_license_summary">Die App ist komplett frei (Open Source) und unter der GPL3-Lizenz lizenziert.</string>
+
+</resources>

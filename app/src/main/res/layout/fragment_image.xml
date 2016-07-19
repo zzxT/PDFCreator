@@ -1,0 +1,89 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/imageView"
+        android:src="@drawable/image"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentEnd="false"
+        android:scaleType="fitCenter"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_centerInParent="true" />
+
+    <ImageButton
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:id="@+id/imageButton_1"
+        android:src="@drawable/ic_camera_iris_white_48dp"
+        android:scaleType="fitCenter"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:layout_marginBottom="4dp" />
+
+    <ImageButton
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:id="@+id/imageButton_2"
+        android:src="@drawable/ic_rotate_right_white_48dp"
+        android:scaleType="fitCenter"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="4dp"
+        android:layout_below="@+id/imageButton_1" />
+
+    <ImageButton
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:id="@+id/imageButton_3"
+        android:src="@drawable/ic_file_pdf_white_48dp"
+        android:scaleType="fitCenter"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_below="@+id/imageButton_4"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="4dp" />
+
+    <ImageButton
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:id="@+id/imageButton_4"
+        android:scaleType="fitCenter"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:src="@drawable/ic_auto_fix_white_48dp"
+        android:layout_below="@+id/imageButton_6"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="4dp" />
+
+    <ImageButton
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:id="@+id/imageButton_6"
+        android:scaleType="fitCenter"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_below="@+id/imageButton_2"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="4dp"
+        android:src="@drawable/ic_crop_white_48dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:src="@drawable/ic_file_pdf_box_white_48dp"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="false"
+        android:layout_marginBottom="@dimen/fab_margin" />
+
+</RelativeLayout>
