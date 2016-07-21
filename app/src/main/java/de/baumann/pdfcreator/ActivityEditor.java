@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -47,14 +48,11 @@ import jp.co.cyberagent.android.gpuimage.GPUImageView;
 
 
 public class ActivityEditor extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener,
-        View.OnClickListener, GPUImageView.OnPictureSavedListener {
+        GPUImageView.OnPictureSavedListener {
 
     private GPUImageFilter mFilter;
     private GPUImageFilterTools.FilterAdjuster mFilterAdjuster;
     private GPUImageView mGPUImageView;
-
-    private final Date date = new Date();
-    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     private final GPUImage.ScaleType mScaleTyp = GPUImage.ScaleType.CENTER_INSIDE;
 
@@ -95,7 +93,7 @@ public class ActivityEditor extends AppCompatActivity implements SeekBar.OnSeekB
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        String path = Environment.getExternalStorageDirectory() + "/Pictures/img_1.jpg";
+                        String path = Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/pdf_temp.jpg";
 
                         Uri myUri= Uri.fromFile(new File(path));
                         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
@@ -112,7 +110,7 @@ public class ActivityEditor extends AppCompatActivity implements SeekBar.OnSeekB
             }
         });
 
-        Bitmap myBitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + "/Pictures/img_1.jpg");
+        Bitmap myBitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/pdf_temp.jpg");
 
         h = myBitmap.getHeight();
         w = myBitmap.getWidth();
@@ -121,49 +119,12 @@ public class ActivityEditor extends AppCompatActivity implements SeekBar.OnSeekB
         assert seekBar != null;
         seekBar.setOnSeekBarChangeListener(this);
 
-        ImageButton chooseFilter = (ImageButton) findViewById(R.id.imageButton_filter);
-        assert chooseFilter != null;
-        chooseFilter.setOnClickListener(this);
 
-        ImageButton save = (ImageButton) findViewById(R.id.imageButton_check);
-        assert save != null;
-        save.setOnClickListener(this);
-
-        File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/img_1.jpg");
+        File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/pdf_temp.jpg");
         mGPUImageView = (GPUImageView) findViewById(R.id.gpuimage);
         assert mGPUImageView != null;
         mGPUImageView.setScaleType(mScaleTyp);
         mGPUImageView.setImage(imgFile);
-    }
-
-    @Override
-    public void onClick(final View v) {
-        switch (v.getId()) {
-            case R.id.imageButton_filter:
-                File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/img_1.jpg");
-                mGPUImageView = (GPUImageView) findViewById(R.id.gpuimage);
-                assert mGPUImageView != null;
-                mGPUImageView.setImage(imgFile);
-
-                GPUImageFilterTools.showDialog(this, new GPUImageFilterTools.OnGpuImageFilterChosenListener() {
-
-                    @Override
-                    public void onGpuImageFilterChosenListener(final GPUImageFilter filter) {
-                        switchFilterTo(filter);
-                        mGPUImageView.requestRender();
-                    }
-
-                });
-                break;
-
-            case R.id.imageButton_check:
-                saveImage();
-                break;
-
-            default:
-                break;
-        }
-
     }
 
     @Override
@@ -177,8 +138,8 @@ public class ActivityEditor extends AppCompatActivity implements SeekBar.OnSeekB
         Snackbar.make(mGPUImageView, getString(R.string.toast_savedImage), Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
 
-        String folder = "/";
-        String fileName = "img_1.jpg";
+        String folder = "/pdf_temp/";
+        String fileName = "pdf_temp.jpg";
 
         mGPUImageView.saveToPictures(folder, fileName, w, h, this);
     }
@@ -211,7 +172,7 @@ public class ActivityEditor extends AppCompatActivity implements SeekBar.OnSeekB
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_editor, menu);
         return true;
     }
 
@@ -220,100 +181,27 @@ public class ActivityEditor extends AppCompatActivity implements SeekBar.OnSeekB
 
         int id = item.getItemId();
 
-        String title;
-        if (id == R.id.action_share) {
+        if (id == R.id.filter) {
 
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-            title = sharedPref.getString("title", null);
-            String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
-                    "/Android/data/de.baumann.pdf/" + dateFormat.format(date) + "_" + title + ".pdf");
+            File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/pdf_temp.jpg");
+            mGPUImageView = (GPUImageView) findViewById(R.id.gpuimage);
+            assert mGPUImageView != null;
+            mGPUImageView.setImage(imgFile);
 
-            Uri myUri= Uri.fromFile(new File(path));
-            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-            sharingIntent.setType("application/pdf");
-            sharingIntent.putExtra(Intent.EXTRA_STREAM, myUri);
-            sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            startActivity(Intent.createChooser(sharingIntent, getString(R.string.action_share_with)));
+            GPUImageFilterTools.showDialog(this, new GPUImageFilterTools.OnGpuImageFilterChosenListener() {
 
+                @Override
+                public void onGpuImageFilterChosenListener(final GPUImageFilter filter) {
+                    switchFilterTo(filter);
+                    mGPUImageView.requestRender();
+                }
+
+            });
         }
 
-        if (id == R.id.action_open) {
+        if (id == R.id.save) {
 
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-            title = sharedPref.getString("title", null);
-            String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
-                    "/Android/data/de.baumann.pdf/" + dateFormat.format(date) + "_" + title + ".pdf");
-
-            File file = new File(path);
-            Intent target = new Intent(Intent.ACTION_VIEW);
-            target.setDataAndType(Uri.fromFile(file),"application/pdf");
-            target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-
-            try {
-                startActivity(target);
-            } catch (ActivityNotFoundException e) {
-                // Instruct the user to install a PDF reader here, or something
-                LayoutInflater inflater = getLayoutInflater();
-
-                View toastLayout = inflater.inflate(R.layout.toast,
-                        (ViewGroup) findViewById(R.id.toast_root_view));
-
-                TextView header = (TextView) toastLayout.findViewById(R.id.toast_message);
-                header.setText(R.string.toast_install_pdf);
-
-                Toast toast = new Toast(getApplicationContext());
-                toast.setGravity(Gravity.FILL_HORIZONTAL | Gravity.BOTTOM, 0, 0);
-                toast.setDuration(Toast.LENGTH_LONG);
-                toast.setView(toastLayout);
-                toast.show();
-            }
-
-        }
-
-        if (id == R.id.action_folder) {
-
-            File directory = new File(Environment.getExternalStorageDirectory() + "/Android/data/de.baumann.pdf/");
-
-            Intent target = new Intent(Intent.ACTION_VIEW);
-            target.setDataAndType(Uri.fromFile(directory), "resource/folder");
-
-            try {
-                startActivity (target);
-            } catch (ActivityNotFoundException e) {
-                LayoutInflater inflater = getLayoutInflater();
-
-                View toastLayout = inflater.inflate(R.layout.toast,
-                        (ViewGroup) findViewById(R.id.toast_root_view));
-
-                TextView header = (TextView) toastLayout.findViewById(R.id.toast_message);
-                header.setText(R.string.toast_install_folder);
-
-                Toast toast = new Toast(getApplicationContext());
-                toast.setGravity(Gravity.FILL_HORIZONTAL | Gravity.BOTTOM, 0, 0);
-                toast.setDuration(Toast.LENGTH_LONG);
-                toast.setView(toastLayout);
-                toast.show();
-            }
-        }
-
-        if (id == R.id.action_settings) {
-
-            SpannableString s;
-            s = new SpannableString(Html.fromHtml(getString(R.string.about_text)));
-
-            Linkify.addLinks(s, Linkify.WEB_URLS);
-
-            final AlertDialog d = new AlertDialog.Builder(ActivityEditor.this)
-                    .setTitle(R.string.about_title)
-                    .setMessage(s)
-                    .setPositiveButton(getString(R.string.toast_yes),
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            }).show();
-            d.show();
-            ((TextView) d.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+            saveImage();
         }
 
         if (id == android.R.id.home) {

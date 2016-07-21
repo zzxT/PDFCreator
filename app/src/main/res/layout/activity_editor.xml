@@ -28,7 +28,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/seekBar"
         android:layout_below="@+id/view"
-        android:layout_margin="@dimen/fab_margin" />
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin" />
 
     <SeekBar
         android:id="@+id/seekBar"
@@ -36,11 +37,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom"
         android:max="100"
-        android:layout_above="@+id/fab"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_marginLeft="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin" />
+        android:layout_alignTop="@+id/fab"
+        android:layout_toStartOf="@+id/fab"
+        android:layout_marginTop="@dimen/fab_margin" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -54,25 +53,5 @@
         android:layout_alignParentStart="false"
         android:layout_marginBottom="@dimen/fab_margin"
         tools:ignore="RelativeOverlap" />
-
-    <ImageButton
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:id="@+id/imageButton_filter"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_auto_fix_white_48dp"
-        android:layout_marginLeft="8dp"
-        android:layout_alignTop="@+id/imageButton_check"
-        android:layout_toEndOf="@+id/imageButton_check" />
-
-    <ImageButton
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:id="@+id/imageButton_check"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_check_white_48dp"
-        android:layout_below="@+id/seekBar"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="@dimen/fab_margin" />
 
 </RelativeLayout>

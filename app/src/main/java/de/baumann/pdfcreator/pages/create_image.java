@@ -37,10 +37,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import de.baumann.pdfcreator.ActivityEditor;
 import de.baumann.pdfcreator.R;
@@ -48,36 +44,37 @@ import de.baumann.pdfcreator.R;
 
 public class create_image extends Fragment {
 
-    private final Date date = new Date();
-    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-
     private String title;
+    private String folder;
 
     private static ImageView img;
     private int img_int = 0;
+    private int imgquality_int;
 
-    private ImageButton ib_2;
     private ImageButton ib_4;
     private ImageButton ib_6;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_image, container, false);
 
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        final String imgQuality = sharedPref.getString("imageQuality", "80");
+        imgquality_int = Integer.parseInt(imgQuality);
+
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/img_1.jpg");
+                File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/pdf_temp.jpg");
                 if(imgFile.exists()){
-                    ib_2.setVisibility(View.GONE);
                     ib_4.setVisibility(View.GONE);
                     ib_6.setVisibility(View.GONE);
 
                     final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
                     final EditText input = new EditText(getActivity());
                     input.setHint(R.string.app_hint);
                     final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
@@ -89,9 +86,9 @@ public class create_image extends Fragment {
                                     title = input.getText().toString().trim();
                                     sharedPref.edit()
                                             .putString("title", title)
-                                            .putString("pathPDF", Environment.getExternalStorageDirectory() +  "/Android/data/de.baumann.pdf/" + dateFormat.format(date) + "_" + title + ".pdf")
+                                            .putString("pathPDF", Environment.getExternalStorageDirectory() +  folder + title + ".pdf")
                                             .apply();
-                                    img_1();
+                                    createPDF();
 
                                     InputStream in;
                                     OutputStream out;
@@ -99,10 +96,11 @@ public class create_image extends Fragment {
                                     try {
 
                                         title = sharedPref.getString("title", null);
+                                        folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
                                         String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
-                                                "/Android/data/de.baumann.pdf/" + dateFormat.format(date) + "_" + title + ".pdf");
+                                                folder + title + ".pdf");
 
-                                        in = new FileInputStream(Environment.getExternalStorageDirectory() +  "/" + dateFormat.format(date) + "_" + title + ".pdf");
+                                        in = new FileInputStream(Environment.getExternalStorageDirectory() +  "/" + title + ".pdf");
                                         out = new FileOutputStream(path);
 
                                         byte[] buffer = new byte[1024];
@@ -123,7 +121,7 @@ public class create_image extends Fragment {
                                     img.setImageResource(R.drawable.image);
                                     img_int = 0;
 
-                                    File pdfFile = new File(Environment.getExternalStorageDirectory() +  "/" + dateFormat.format(date) + "_" + title + ".pdf");
+                                    File pdfFile = new File(Environment.getExternalStorageDirectory() +  "/" + title + ".pdf");
                                     if(pdfFile.exists()){
                                         pdfFile.delete();
                                     }
@@ -152,27 +150,10 @@ public class create_image extends Fragment {
                 img.setRotation(0);
                 img_int = 0;
 
-                ib_2.setVisibility(View.VISIBLE);
                 ib_4.setVisibility(View.VISIBLE);
                 ib_6.setVisibility(View.VISIBLE);
 
                 selectImage_1();
-            }
-        });
-
-
-        ib_2 = (ImageButton) rootView.findViewById(R.id.imageButton_2);
-        ib_2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/img_1.jpg");
-                if(imgFile.exists()){
-                    img.setRotation(90);
-                    img_int = 270;
-                } else {
-                    Snackbar.make(img, getString(R.string.toast_noImage), Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
             }
         });
 
@@ -183,7 +164,7 @@ public class create_image extends Fragment {
         ib_4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/img_1.jpg");
+                File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/pdf_temp.jpg");
                 if(imgFile.exists()){
                     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     sharedPref.edit()
@@ -206,7 +187,7 @@ public class create_image extends Fragment {
         ib_6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/img_1.jpg");
+                File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/pdf_temp.jpg");
                 if(imgFile.exists()){
                     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     sharedPref.edit()
@@ -214,7 +195,7 @@ public class create_image extends Fragment {
                             .putBoolean("appStarted", false)
                             .apply();
 
-                    Intent intent = new Intent(getActivity(), com.example.croppersample.ActivityCrop.class);
+                    Intent intent = new Intent(getActivity(), com.theartofdev.edmodo.cropper.sample.MainActivity.class);
                     startActivity(intent);
                     getActivity().overridePendingTransition(0, 0);
                     getActivity().finish();
@@ -237,9 +218,8 @@ public class create_image extends Fragment {
         }
 
         img=(ImageView)rootView.findViewById(R.id.imageView);
-        File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/img_1.jpg");
+        File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/pdf_temp.jpg");
         if(imgFile.exists()){
-            ib_2.setVisibility(View.VISIBLE);
             ib_4.setVisibility(View.VISIBLE);
             ib_6.setVisibility(View.VISIBLE);
             img.setRotation(0);
@@ -247,7 +227,6 @@ public class create_image extends Fragment {
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             img.setImageBitmap(myBitmap);
         } else {
-            ib_2.setVisibility(View.GONE);
             ib_4.setVisibility(View.GONE);
             ib_6.setVisibility(View.GONE);
         }
@@ -264,14 +243,14 @@ public class create_image extends Fragment {
             BitmapDrawable drawable = (BitmapDrawable) img.getDrawable();
             Bitmap bitmap = drawable.getBitmap();
 
-            File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/img_1.jpg");
+            File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/pdf_temp.jpg");
 
             // Encode the file as a JPEG image.
             FileOutputStream outStream;
             try {
 
                 outStream = new FileOutputStream(imgFile);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outStream);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, imgquality_int, outStream);
                 outStream.flush();
                 outStream.close();
 
@@ -281,18 +260,19 @@ public class create_image extends Fragment {
         }
     }
 
-    private void img_1() {
+    private void createPDF() {
         // Input file
-        String inputPath = Environment.getExternalStorageDirectory() + "/Pictures/img_1.jpg";
+        String inputPath = Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/pdf_temp.jpg";
 
         // Output file
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         title = sharedPref.getString("title", null);
+        folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
         String outputPath = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
-                "/Android/data/de.baumann.pdf/" + dateFormat.format(date) + "_" + title + ".pdf");
+                folder + title + ".pdf");
 
         // Run conversion
-        final boolean result = convertToPdf1(inputPath, outputPath);
+        final boolean result = convertToPdf(inputPath, outputPath);
 
         // Notify the UI
         if (result) {
@@ -303,8 +283,9 @@ public class create_image extends Fragment {
                         public void onClick(View view) {
                             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                             title = sharedPref.getString("title", null);
+                            folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
                             String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
-                                    "/Android/data/de.baumann.pdf/" + dateFormat.format(date) + "_" + title + ".pdf");
+                                    folder + title + ".pdf");
 
                             File file = new File(path);
                             Intent target = new Intent(Intent.ACTION_VIEW);
@@ -325,7 +306,7 @@ public class create_image extends Fragment {
                 .setAction("Action", null).show();
     }
 
-    private boolean convertToPdf1(String jpgFilePath, String outputPdfPath) {
+    private boolean convertToPdf(String jpgFilePath, String outputPdfPath) {
         try {
             // Check if Jpg file exists or not
 
@@ -351,7 +332,7 @@ public class create_image extends Fragment {
             document.add(image);
             document.close();
 
-            File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/img_1.jpg");
+            File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/pdf_temp.jpg");
             if(imgFile.exists()){
                 imgFile.delete();
             }
@@ -377,7 +358,7 @@ public class create_image extends Fragment {
 
                 if (options[item].equals(getString(R.string.goal_camera))) {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    File f = new File(Environment.getExternalStorageDirectory() + "/Pictures/img_1.jpg");
+                    File f = new File(Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/pdf_temp.jpg");
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
                     startActivityForResult(intent, 1);
 
@@ -403,7 +384,7 @@ public class create_image extends Fragment {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 1) {
 
-                File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/img_1.jpg");
+                File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/pdf_temp.jpg");
                 if(imgFile.exists()){
 
                     Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
@@ -417,7 +398,7 @@ public class create_image extends Fragment {
                     try {
 
                         outStream = new FileOutputStream(imgFile);
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outStream);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, imgquality_int, outStream);
                         outStream.flush();
                         outStream.close();
 
@@ -434,14 +415,14 @@ public class create_image extends Fragment {
                 BitmapDrawable drawable = (BitmapDrawable) img.getDrawable();
                 Bitmap bitmap = drawable.getBitmap();
 
-                File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/img_1.jpg");
+                File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/pdf_temp.jpg");
 
                 // Encode the file as a JPEG image.
                 FileOutputStream outStream;
                 try {
 
                     outStream = new FileOutputStream(imgFile);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outStream);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, imgquality_int, outStream);
                     outStream.flush();
                     outStream.close();
 
@@ -455,14 +436,14 @@ public class create_image extends Fragment {
                 BitmapDrawable drawable = (BitmapDrawable) img.getDrawable();
                 Bitmap bitmap = drawable.getBitmap();
 
-                File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/img_1.jpg");
+                File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/pdf_temp.jpg");
 
                 // Encode the file as a PNG image.
                 FileOutputStream outStream;
                 try {
 
                     outStream = new FileOutputStream(imgFile);
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 80, outStream);
+                    bitmap.compress(Bitmap.CompressFormat.PNG, imgquality_int, outStream);
                     outStream.flush();
                     outStream.close();
 
@@ -483,14 +464,14 @@ public class create_image extends Fragment {
                     BitmapDrawable drawable = (BitmapDrawable) img.getDrawable();
                     Bitmap bitmap = drawable.getBitmap();
 
-                    File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/img_1.jpg");
+                    File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/pdf_temp.jpg");
 
                     // Encode the file as a PNG image.
                     FileOutputStream outStream;
                     try {
 
                         outStream = new FileOutputStream(imgFile);
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 80, outStream);
+                        bitmap.compress(Bitmap.CompressFormat.PNG, imgquality_int, outStream);
                         outStream.flush();
                         outStream.close();
 

@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,23 +37,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import de.baumann.pdfcreator.R;
 
 
 public class add_text extends Fragment {
 
-    private final Date date = new Date();
-    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-
     private static EditText edit;
     private String title;
+    private String folder;
     private String pages;
 
     @Override
@@ -69,6 +64,7 @@ public class add_text extends Fragment {
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 title = sharedPref.getString("title", null);
 
+                backup();
                 createPDF();
                 deleteTemp();
             }
@@ -90,11 +86,13 @@ public class add_text extends Fragment {
         ib_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                backup();
                 final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 pages = sharedPref.getString("deletePages", null);
 
                 final EditText input = new EditText(getActivity());
                 input.setHint("1-5,7,15-20");
+                input.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
                         .setView(input)
                         .setMessage(R.string.add_text_hint2)
@@ -166,6 +164,8 @@ public class add_text extends Fragment {
 
             if (requestCode == 2) {
 
+                backup();
+
                 String FilePath = data.getData().getPath();
                 String FileTitle = FilePath.substring(FilePath.lastIndexOf("/")+1);
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -177,8 +177,9 @@ public class add_text extends Fragment {
 
                     // Load existing PDF
                     title = sharedPref.getString("title2", null);
+                    folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
                     String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
-                            "/Android/data/de.baumann.pdf/" + dateFormat.format(date) + "_" + title + ".pdf");
+                            folder + title + ".pdf");
 
                     String path2 = sharedPref.getString("pathPDF2", null);
 
@@ -245,9 +246,10 @@ public class add_text extends Fragment {
             // Load existing PDF
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             title = sharedPref.getString("title", null);
+            folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
             pages = sharedPref.getString("deletePages", null);
             String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
-                    "/Android/data/de.baumann.pdf/" + dateFormat.format(date) + "_" + title + ".pdf");
+                    folder + title + ".pdf");
             PdfReader reader = new PdfReader(path);
             reader.selectPages(pages);
 
@@ -280,8 +282,9 @@ public class add_text extends Fragment {
             // Load existing PDF
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             title = sharedPref.getString("title", null);
+            folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
             String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
-                    "/Android/data/de.baumann.pdf/" + dateFormat.format(date) + "_" + title + ".pdf");
+                    folder + title + ".pdf");
             PdfReader reader = new PdfReader(path);
 
             int n = reader.getNumberOfPages();
@@ -322,8 +325,9 @@ public class add_text extends Fragment {
         try {
 
             title = sharedPref.getString("title", null);
+            folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
             String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
-                    "/Android/data/de.baumann.pdf/" + dateFormat.format(date) + "_" + title + ".pdf");
+                    folder + title + ".pdf");
 
             in = new FileInputStream(Environment.getExternalStorageDirectory() +  "/" + "123456.pdf");
             out = new FileOutputStream(path);
@@ -357,8 +361,9 @@ public class add_text extends Fragment {
                     public void onClick(View view) {
                         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                         title = sharedPref.getString("title", null);
+                        folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
                         String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
-                                "/Android/data/de.baumann.pdf/" + dateFormat.format(date) + "_" + title + ".pdf");
+                                folder + title + ".pdf");
 
                         File file = new File(path);
                         Intent target = new Intent(Intent.ACTION_VIEW);
@@ -375,5 +380,43 @@ public class add_text extends Fragment {
                     }
                 });
         snackbar.show();
+    }
+
+    private void backup(){
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        if (sharedPref.getBoolean ("backup", false)){
+
+            title = sharedPref.getString("title", null);
+
+            InputStream in;
+            OutputStream out;
+
+            try {
+
+                title = sharedPref.getString("title", null);
+                folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+                String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                        folder + title + ".pdf");
+
+                in = new FileInputStream(path);
+                out = new FileOutputStream(Environment.getExternalStorageDirectory() +
+                        folder + "backups/" + title + ".pdf");
+
+                byte[] buffer = new byte[1024];
+                int read;
+                while ((read = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, read);
+                }
+                in.close();
+
+                // write the output file
+                out.flush();
+                out.close();
+            } catch (Exception e) {
+                Log.e("tag", e.getMessage());
+            }
+        }
     }
 }

@@ -42,13 +42,15 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
-        <activity
-            android:name="com.example.croppersample.ActivityCrop"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
 
         <activity
             android:name=".UserSettingsActivity" />
+
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.sample.MainActivity" />
+
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.sample.CropResultActivity" />
 
     </application>
 

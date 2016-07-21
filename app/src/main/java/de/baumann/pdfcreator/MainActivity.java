@@ -20,10 +20,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
-import android.text.SpannableString;
-import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,12 +31,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import de.baumann.pdfcreator.pages.add_text;
 import de.baumann.pdfcreator.pages.create_image;
@@ -51,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
     final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
 
-    private final Date date = new Date();
-    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    private String title;
+    private String folder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,9 +110,21 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        File directory = new File(Environment.getExternalStorageDirectory() + "/Android/data/de.baumann.pdf/");
+        if (sharedPref.getBoolean ("folderDef", false)){
+            sharedPref.edit()
+                    .putString("folder", "/Android/data/de.baumann.pdf/")
+                    .apply();
+        }
+
+        folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+        File directory = new File(Environment.getExternalStorageDirectory() + folder + "/backups/");
         if (!directory.exists()) {
             directory.mkdirs();
+        }
+
+        File imgFolder = new File(Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/");
+        if (!imgFolder.exists()) {
+            imgFolder.mkdirs();
         }
     }
 
@@ -180,20 +184,22 @@ public class MainActivity extends AppCompatActivity {
 
         int id = item.getItemId();
 
-        String title;
         if (id == R.id.action_share) {
 
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             title = sharedPref.getString("title", null);
+            folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
             String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
-                    "/Android/data/de.baumann.pdf/" + dateFormat.format(date) + "_" + title + ".pdf");
+                    folder + title + ".pdf");
             String FileTitle = path.substring(path.lastIndexOf("/")+1);
+            String text = getString(R.string.action_share_Text);
 
             Uri myUri= Uri.fromFile(new File(path));
             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
             sharingIntent.setType("application/pdf");
             sharingIntent.putExtra(Intent.EXTRA_STREAM, myUri);
             sharingIntent.putExtra(Intent.EXTRA_SUBJECT, FileTitle);
+            sharingIntent.putExtra(Intent.EXTRA_TEXT, text + " " + FileTitle);
             sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             startActivity(Intent.createChooser(sharingIntent, getString(R.string.action_share_with)));
         }
@@ -202,8 +208,9 @@ public class MainActivity extends AppCompatActivity {
 
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             title = sharedPref.getString("title", null);
+            folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
             String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
-                    "/Android/data/de.baumann.pdf/" + dateFormat.format(date) + "_" + title + ".pdf");
+                    folder + title + ".pdf");
 
             File file = new File(path);
             Intent target = new Intent(Intent.ACTION_VIEW);
@@ -233,7 +240,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.action_folder) {
 
-            File directory = new File(Environment.getExternalStorageDirectory() + "/Android/data/de.baumann.pdf/");
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+            folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+            File directory = new File(Environment.getExternalStorageDirectory() + folder);
 
             Intent target = new Intent(Intent.ACTION_VIEW);
             target.setDataAndType(Uri.fromFile(directory), "resource/folder");

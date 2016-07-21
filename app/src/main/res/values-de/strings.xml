@@ -1,20 +1,22 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name">PDF Creator</string>
-    <string name="app_title">Bitte Titel eingeben. Beginnt mit:</string>
+    <string name="app_title">Bitte Titel eingeben.</string>
     <string name="app_title_edit">Bild bearbeiten</string>
     <string name="app_title_crop" tools:keep="@string/app_title_crop">Bild zuschneiden</string>
-    <string name="app_hint">yyyy-MM-dd_[dein Titel]</string>
+    <string name="app_hint" tools:ignore="TypographyEllipsis">Was immer du willst...</string>
     <string name="app_permissions">Du musst der App Zugriff auf den Gerätespeicher gewähren, damit PDF-Dateien
         gespeichert werden können. Danach solltest du die Anwendung komplett schließen oder das Telefon neu starten.
         Wenn du den Zugriff verweigerst und die Funktion später doch nutzen willst, kannst du die Berechtigung
         nachträglich erteilen. Öffne dafür: Systemeinstellungen - Apps - Wetter. Im Bereich Berechtigungen kannst
         dann die entsprechende Einstellung vornehmen.</string>
+
     <string name="action_share">PDF teilen</string>
     <string name="action_open">PDF öffnen</string>
     <string name="action_folder">Öffne Anwendungsordner</string>
     <string name="action_settings">Einstellungen</string>
     <string name="action_share_with">PDF teilen mit:</string>
+    <string name="action_share_Text">Folgende Datei ist dem Anhang beigefügt:</string>
 
     <string name="create_image">Bild zu PDF</string>
     <string name="create_text">Text zu PDF</string>
@@ -51,8 +53,39 @@
     <string name="filter_10">Mitten ausgleichen</string>
 
     <string name="settings_prefApp">About the app</string>
+    <string name="settings_prefDir">Anwendungsverzeichnis</string>
 
     <string name="pref_license">Lizenz</string>
     <string name="pref_license_summary">Die App ist komplett frei (Open Source) und unter der GPL3-Lizenz lizenziert.</string>
+
+    <string name="pref_lib">Bibliotheken</string>
+    <string name="pref_lib_summary">Die folgenden quelloffenen Bibliotheken werden in der App benutzt.</string>
+
+    <string name="pref_imageQuality">Bildqualität</string>
+    <string name="pref_imageQuality_summary">Bestimme die Bildqualität. Je höher die Bildqualität umso größer werden die PDF-Dateien.</string>
+
+    <string name="pref_backup">Sicherung</string>
+    <string name="pref_backup_summary">Sollen PDF-Dateien vor dem Bearbeiten (z.B.: Hinzufügen oder Löschen von Seiten) gesichert werden?</string>
+
+    <string name="pref_folderDef">Standard</string>
+    <string name="pref_folderDef_summary">Benutze das Standardverzeichnis: \"/Android/data/de.baumann.pdf/\".</string>
+
+    <string name="pref_folder">Eigenes</string>
+    <string name="pref_folder_summary">Ändere das Verzeichnis in dem neue PDF-Dateien und Sicherungen gespeichert werden.
+        Der eingegebene Pfad muss mit einem \"/\" anfangen und enden, wie z.B. \"/Download/PDF/\". Noch nicht vorhandene Verzeichnisse
+        werden automatisch erstellt.</string>
+    <string name="pref_folder_hint" tools:ignore="TypographyEllipsis">/Download/PDF/...</string>
+
+    <string-array name="listArrayImage">
+        <item>Hoch (100%)</item>
+        <item>Normal (80%)</item>
+        <item>Niedrig (60%)</item>
+    </string-array>
+
+    <string-array name="listValuesImage">
+        <item>100</item>
+        <item>80</item>
+        <item>60</item>
+    </string-array>
 
 </resources>

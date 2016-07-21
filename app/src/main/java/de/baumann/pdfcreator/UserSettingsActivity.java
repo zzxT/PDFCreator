@@ -64,19 +64,47 @@ public class UserSettingsActivity extends AppCompatActivity {
             });
         }
 
+        private void addLibListener() {
+            Preference reset = findPreference("lib");
+
+            reset.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                public boolean onPreferenceClick(Preference pref) {
+
+                    SpannableString s;
+                    s = new SpannableString(Html.fromHtml(getString(R.string.lib_text)));
+
+                    Linkify.addLinks(s, Linkify.WEB_URLS);
+
+                    final AlertDialog d = new AlertDialog.Builder(getActivity())
+                            .setMessage(s)
+                            .setPositiveButton(getString(R.string.toast_yes),
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    }).show();
+                    d.show();
+                    ((TextView) d.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+
+                    return true;
+                }
+            });
+        }
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
             addPreferencesFromResource(R.xml.user_settings);
             addLicenseListener();
+            addLibListener();
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_settings, menu);
+        getMenuInflater().inflate(R.menu.menu_settings, menu);
         return true;
     }
 

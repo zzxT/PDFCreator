@@ -28,20 +28,14 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import de.baumann.pdfcreator.R;
 
 
 public class create_text extends Fragment {
 
-    private final Date date = new Date();
-    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-
     private String title;
+    private String folder;
     private static EditText edit;
 
     @Override
@@ -54,6 +48,7 @@ public class create_text extends Fragment {
             @Override
             public void onClick(View view) {
                 final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
                 final EditText input = new EditText(getActivity());
                 input.setHint(R.string.app_hint);
                 final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
@@ -65,9 +60,9 @@ public class create_text extends Fragment {
                                 title = input.getText().toString().trim();
                                 sharedPref.edit()
                                         .putString("title", title)
-                                        .putString("pathPDF", Environment.getExternalStorageDirectory() +  "/Android/data/de.baumann.pdf/" + dateFormat.format(date) + "_" + title + ".pdf")
+                                        .putString("pathPDF", Environment.getExternalStorageDirectory() +  folder + title + ".pdf")
                                         .apply();
-                                img_1();
+                                createPDF();
 
                                 InputStream in;
                                 OutputStream out;
@@ -75,10 +70,11 @@ public class create_text extends Fragment {
                                 try {
 
                                     title = sharedPref.getString("title", null);
+                                    folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
                                     String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
-                                            "/Android/data/de.baumann.pdf/" + dateFormat.format(date) + "_" + title + ".pdf");
+                                            folder + title + ".pdf");
 
-                                    in = new FileInputStream(Environment.getExternalStorageDirectory() +  "/" + dateFormat.format(date) + "_" + title + ".pdf");
+                                    in = new FileInputStream(Environment.getExternalStorageDirectory() +  "/" + title + ".pdf");
                                     out = new FileOutputStream(path);
 
                                     byte[] buffer = new byte[1024];
@@ -95,7 +91,7 @@ public class create_text extends Fragment {
                                     Log.e("tag", e.getMessage());
                                 }
 
-                                File pdfFile = new File(Environment.getExternalStorageDirectory() +  "/" + dateFormat.format(date) + "_" + title + ".pdf");
+                                File pdfFile = new File(Environment.getExternalStorageDirectory() +  "/" + title + ".pdf");
                                 if(pdfFile.exists()){
                                     pdfFile.delete();
                                 }
@@ -145,16 +141,17 @@ public class create_text extends Fragment {
         }
     }
 
-    private void img_1() {
+    private void createPDF() {
 
         // Output file
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         title = sharedPref.getString("title", null);
+        folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
         String outputPath = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
-                "/Android/data/de.baumann.pdf/" + dateFormat.format(date) + "_" + title + ".pdf");
+                folder + title + ".pdf");
 
         // Run conversion
-        final boolean result = convertToPdf1(outputPath);
+        final boolean result = convertToPdf(outputPath);
 
         // Notify the UI
         if (result) {
@@ -164,9 +161,10 @@ public class create_text extends Fragment {
                         @Override
                         public void onClick(View view) {
                             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                            folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
                             title = sharedPref.getString("title", null);
                             String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
-                                    "/Android/data/de.baumann.pdf/" + dateFormat.format(date) + "_" + title + ".pdf");
+                                    folder + title + ".pdf");
 
                             File file = new File(path);
                             Intent target = new Intent(Intent.ACTION_VIEW);
@@ -187,7 +185,7 @@ public class create_text extends Fragment {
                 .setAction("Action", null).show();
     }
 
-    private boolean convertToPdf1(String outputPdfPath) {
+    private boolean convertToPdf(String outputPdfPath) {
         try {
 
             String paragraph = edit.getText().toString().trim();
