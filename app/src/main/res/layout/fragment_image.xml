@@ -14,7 +14,8 @@
         android:layout_alignParentEnd="false"
         android:scaleType="fitCenter"
         android:layout_margin="@dimen/fab_margin"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        tools:ignore="ContentDescription" />
 
     <ImageButton
         android:layout_width="56dp"
@@ -25,7 +26,8 @@
         android:layout_marginLeft="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
         android:layout_alignTop="@+id/imageView"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        tools:ignore="ContentDescription" />
 
     <ImageButton
         android:layout_width="56dp"
@@ -35,7 +37,8 @@
         android:scaleType="fitCenter"
         android:layout_marginRight="@dimen/fab_margin"
         android:layout_below="@+id/imageButton_4"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        tools:ignore="ContentDescription" />
 
     <ImageButton
         android:layout_width="56dp"
@@ -45,7 +48,8 @@
         android:layout_marginRight="@dimen/fab_margin"
         android:src="@drawable/ic_auto_fix_white_48dp"
         android:layout_below="@+id/imageButton_6"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        tools:ignore="ContentDescription" />
 
     <ImageButton
         android:layout_width="56dp"
@@ -55,7 +59,8 @@
         android:layout_marginRight="@dimen/fab_margin"
         android:src="@drawable/ic_crop_white_48dp"
         android:layout_below="@+id/imageButton_1"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        tools:ignore="ContentDescription" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

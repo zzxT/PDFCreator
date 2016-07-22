@@ -52,13 +52,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (savedInstanceState == null) {
-            setMainFragmentByPreset(CropDemoPreset.RECT);
+            setMainFragmentByPreset();
         }
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
     }
 
     @Override
@@ -75,10 +70,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void setMainFragmentByPreset(CropDemoPreset demoPreset) {
+    private void setMainFragmentByPreset() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, MainFragment.newInstance(demoPreset))
+                .replace(R.id.container, MainFragment.newInstance())
                 .commit();
     }
 

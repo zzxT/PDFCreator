@@ -38,6 +38,7 @@ import java.util.Locale;
 import de.baumann.pdfcreator.R;
 
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class create_text extends Fragment {
 
     private String title;

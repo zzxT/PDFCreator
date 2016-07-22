@@ -12,7 +12,7 @@
 
 package com.theartofdev.edmodo.cropper.sample;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -53,10 +53,10 @@ public final class MainFragment extends Fragment
     /**
      * Returns a new instance of this fragment for the given section number.
      */
-    public static MainFragment newInstance(CropDemoPreset demoPreset) {
+    public static MainFragment newInstance() {
         MainFragment fragment = new MainFragment();
         Bundle args = new Bundle();
-        args.putString("DEMO_PRESET", demoPreset.name());
+        args.putString("DEMO_PRESET", CropDemoPreset.RECT.name());
         fragment.setArguments(args);
         return fragment;
     }
@@ -128,10 +128,10 @@ public final class MainFragment extends Fragment
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         mDemoPreset = CropDemoPreset.valueOf(getArguments().getString("DEMO_PRESET"));
-        ((MainActivity) activity).setCurrentFragment(this);
+        ((MainActivity) getActivity()).setCurrentFragment(this);
     }
 
     @Override
@@ -154,7 +154,7 @@ public final class MainFragment extends Fragment
     }
 
     @Override
-    public void onGetCroppedImageComplete(CropImageView view, Bitmap bitmap, Exception error) {
+    public void onGetCroppedImageComplete(Bitmap bitmap, Exception error) {
         handleCropResult(null, bitmap, error);
     }
 

@@ -96,6 +96,5 @@
     <string name="app_title_2" tools:ignore="TypographyEllipsis">Speichere Bild ...</string>
 
     <string name="crop_image_menu_rotate_left">Nach links drehen</string>
-    <string name="pick_image_intent_chooser_title">Quelle auswählen</string>
 
 </resources>

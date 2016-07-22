@@ -278,16 +278,9 @@ public class CropOverlayView extends View {
     }
 
     /**
-     * Get the current guidelines option set.
-     */
-    public CropImageView.Guidelines getGuidelines() {
-        return mGuidelines;
-    }
-
-    /**
      * Sets the guidelines for the CropOverlayView to be either on, off, or to show when resizing the application.
      */
-    public void setGuidelines(CropImageView.Guidelines guidelines) {
+    private void setGuidelines(CropImageView.Guidelines guidelines) {
         if (mGuidelines != guidelines) {
             mGuidelines = guidelines;
             if (initializedCropWindow) {
@@ -306,7 +299,7 @@ public class CropOverlayView extends View {
     /**
      * Sets whether the aspect ratio is fixed or not; true fixes the aspect ratio, while false allows it to be changed.
      */
-    public void setFixedAspectRatio(boolean fixAspectRatio) {
+    private void setFixedAspectRatio(boolean fixAspectRatio) {
         if (mFixAspectRatio != fixAspectRatio) {
             mFixAspectRatio = fixAspectRatio;
             if (initializedCropWindow) {
@@ -326,7 +319,7 @@ public class CropOverlayView extends View {
     /**
      * Sets the X value of the aspect ratio; is defaulted to 1.
      */
-    public void setAspectRatioX(int aspectRatioX) {
+    private void setAspectRatioX(int aspectRatioX) {
         if (aspectRatioX <= 0) {
             throw new IllegalArgumentException("Cannot set aspect ratio value to a number less than or equal to 0.");
         } else if (mAspectRatioX != aspectRatioX) {
@@ -353,7 +346,7 @@ public class CropOverlayView extends View {
      * @param aspectRatioY int that specifies the new Y value of the aspect
      * ratio
      */
-    public void setAspectRatioY(int aspectRatioY) {
+    private void setAspectRatioY(int aspectRatioY) {
         if (aspectRatioY <= 0) {
             throw new IllegalArgumentException("Cannot set aspect ratio value to a number less than or equal to 0.");
         } else if (mAspectRatioY != aspectRatioY) {
@@ -372,7 +365,7 @@ public class CropOverlayView extends View {
      * specified bounding box when the crop window edge is less than or equal to
      * this distance (in pixels) away from the bounding box edge. (default: 3)
      */
-    public void setSnapRadius(float snapRadius) {
+    private void setSnapRadius(float snapRadius) {
         mSnapRadius = snapRadius;
     }
 
@@ -396,17 +389,6 @@ public class CropOverlayView extends View {
      */
     public void setInitialCropWindowRect(Rect rect) {
         mInitialCropWindowRect.set(rect != null ? rect : BitmapUtils.EMPTY_RECT);
-        if (initializedCropWindow) {
-            initCropWindow();
-            invalidate();
-            callOnCropWindowChanged(false);
-        }
-    }
-
-    /**
-     * Reset crop window to initial rectangle.
-     */
-    public void resetCropWindowRect() {
         if (initializedCropWindow) {
             initCropWindow();
             invalidate();

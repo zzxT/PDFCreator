@@ -108,8 +108,7 @@ final class BitmapCroppingWorkerTask extends AsyncTask<Void, Void, BitmapCroppin
     //endregion
 
     public BitmapCroppingWorkerTask(CropImageView cropImageView, Bitmap bitmap, float[] cropPoints,
-                                    int degreesRotated, boolean fixAspectRatio, int aspectRatioX, int aspectRatioY,
-                                    Uri saveUri, Bitmap.CompressFormat saveCompressFormat, int saveCompressQuality) {
+                                    int degreesRotated, boolean fixAspectRatio, int aspectRatioX, int aspectRatioY) {
 
         mCropImageViewReference = new WeakReference<>(cropImageView);
         mContext = cropImageView.getContext();
@@ -120,9 +119,9 @@ final class BitmapCroppingWorkerTask extends AsyncTask<Void, Void, BitmapCroppin
         mFixAspectRatio = fixAspectRatio;
         mAspectRatioX = aspectRatioX;
         mAspectRatioY = aspectRatioY;
-        mSaveUri = saveUri;
-        mSaveCompressFormat = saveCompressFormat;
-        mSaveCompressQuality = saveCompressQuality;
+        mSaveUri = null;
+        mSaveCompressFormat = null;
+        mSaveCompressQuality = 0;
         mOrgWidth = 0;
         mOrgHeight = 0;
         mReqWidth = 0;
@@ -132,8 +131,7 @@ final class BitmapCroppingWorkerTask extends AsyncTask<Void, Void, BitmapCroppin
     public BitmapCroppingWorkerTask(CropImageView cropImageView, Uri uri, float[] cropPoints,
                                     int degreesRotated, int orgWidth, int orgHeight,
                                     boolean fixAspectRatio, int aspectRatioX, int aspectRatioY,
-                                    int reqWidth, int reqHeight,
-                                    Uri saveUri, Bitmap.CompressFormat saveCompressFormat, int saveCompressQuality) {
+                                    int reqWidth, int reqHeight) {
 
         mCropImageViewReference = new WeakReference<>(cropImageView);
         mContext = cropImageView.getContext();
@@ -147,17 +145,10 @@ final class BitmapCroppingWorkerTask extends AsyncTask<Void, Void, BitmapCroppin
         mOrgHeight = orgHeight;
         mReqWidth = reqWidth;
         mReqHeight = reqHeight;
-        mSaveUri = saveUri;
-        mSaveCompressFormat = saveCompressFormat;
-        mSaveCompressQuality = saveCompressQuality;
+        mSaveUri = null;
+        mSaveCompressFormat = null;
+        mSaveCompressQuality = 0;
         mBitmap = null;
-    }
-
-    /**
-     * The Android URI that this task is currently loading.
-     */
-    public Uri getUri() {
-        return mUri;
     }
 
     /**

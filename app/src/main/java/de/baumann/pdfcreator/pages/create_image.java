@@ -48,6 +48,7 @@ import de.baumann.pdfcreator.ActivityEditor;
 import de.baumann.pdfcreator.R;
 
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class create_image extends Fragment {
 
     private String title;

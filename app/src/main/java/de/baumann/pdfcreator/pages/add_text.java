@@ -43,6 +43,7 @@ import java.util.List;
 import de.baumann.pdfcreator.R;
 
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class add_text extends Fragment {
 
     private static EditText edit;

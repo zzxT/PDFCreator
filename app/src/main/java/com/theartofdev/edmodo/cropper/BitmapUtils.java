@@ -95,7 +95,7 @@ final class BitmapUtils {
      * If no rotation is required the image will not be rotated.<br>
      * New bitmap is created and the old one is recycled.
      */
-    public static RotateBitmapResult rotateBitmapByExif(Bitmap bitmap, ExifInterface exif) {
+    private static RotateBitmapResult rotateBitmapByExif(Bitmap bitmap, ExifInterface exif) {
         int degrees;
         int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
         switch (orientation) {

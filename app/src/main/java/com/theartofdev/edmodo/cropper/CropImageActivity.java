@@ -13,14 +13,10 @@
 package com.theartofdev.edmodo.cropper;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-
-import java.io.File;
-import java.io.IOException;
 
 import de.baumann.pdfcreator.R;
 
@@ -98,7 +94,7 @@ public class CropImageActivity extends AppCompatActivity implements CropImageVie
     }
 
     @Override
-    public void onSaveCroppedImageComplete(CropImageView view, Uri uri, Exception error) {
+    public void onSaveCroppedImageComplete(Uri uri, Exception error) {
         setResult(uri, error);
     }
 

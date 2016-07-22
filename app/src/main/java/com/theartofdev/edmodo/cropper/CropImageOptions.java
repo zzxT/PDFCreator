@@ -190,67 +190,67 @@ public class CropImageOptions implements Parcelable {
     /**
      * the title of the {@link CropImageActivity}
      */
-    public String activityTitle;
+    public final String activityTitle;
 
     /**
      * the color to use for action bar items icons
      */
-    public int activityMenuIconColor;
+    private final int activityMenuIconColor;
 
     /**
      * the Android Uri to save the cropped image to
      */
-    public Uri outputUri;
+    private final Uri outputUri;
 
     /**
      * the compression format to use when writting the image
      */
-    public Bitmap.CompressFormat outputCompressFormat;
+    private final Bitmap.CompressFormat outputCompressFormat;
 
     /**
      * the quility (if applicable) to use when writting the image (0 - 100)
      */
-    public int outputCompressQuality;
+    private final int outputCompressQuality;
 
     /**
      * the width to downsample the cropped image to
      */
-    public int outputRequestWidth;
+    private final int outputRequestWidth;
 
     /**
      * the height to downsample the cropped image to
      */
-    public int outputRequestHeight;
+    private final int outputRequestHeight;
 
     /**
      * if the result of crop image activity should not save the cropped image bitmap
      */
-    public boolean noOutputImage;
+    private final boolean noOutputImage;
 
     /**
      * the initial rectangle to set on the cropping image after loading
      */
-    public Rect initialCropWindowRectangle;
+    public final Rect initialCropWindowRectangle;
 
     /**
      * the initial rotation to set on the cropping image after loading (0-360 degrees clockwise)
      */
-    public int initialRotation;
+    public final int initialRotation;
 
     /**
      * if to allow (all) rotation during cropping (activity)
      */
-    public boolean allowRotation;
+    private final boolean allowRotation;
 
     /**
      * if to allow counter-clockwise rotation during cropping (activity)
      */
-    public boolean allowCounterRotation;
+    private final boolean allowCounterRotation;
 
     /**
      * the amount of degreees to rotate clockwise or counter-clockwise
      */
-    public int rotationDegrees;
+    private final int rotationDegrees;
 
     /**
      * Init options with defaults.

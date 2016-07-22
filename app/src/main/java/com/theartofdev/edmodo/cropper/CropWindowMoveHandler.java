@@ -12,7 +12,6 @@
 
 package com.theartofdev.edmodo.cropper;
 
-import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
@@ -22,11 +21,6 @@ import android.graphics.RectF;
 final class CropWindowMoveHandler {
 
     //region: Fields and Consts
-
-    /**
-     * Matrix used for rectangle rotation handling
-     */
-    private static final Matrix MATRIX = new Matrix();
 
     /**
      * Minimum width in pixels that the crop window can get.

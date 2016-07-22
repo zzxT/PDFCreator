@@ -40,11 +40,11 @@ import de.baumann.pdfcreator.pages.create_image;
 import de.baumann.pdfcreator.pages.add_image;
 import de.baumann.pdfcreator.pages.create_text;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class MainActivity extends AppCompatActivity {
 
     final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
 
-    private String title;
     private String folder;
 
     @Override
@@ -185,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
         int id = item.getItemId();
 
+        String title;
         if (id == R.id.action_share) {
 
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
