@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
             directory.mkdirs();
         }
 
-        File imgFolder = new File(Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/");
+        File imgFolder = new File(Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/");
         if (!imgFolder.exists()) {
             imgFolder.mkdirs();
         }
@@ -279,6 +280,19 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+
+        File file = new File(Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/");
+
+        if (file.exists()) {
+            String deleteCmd = "rm -r " + file;
+            Runtime runtime = Runtime.getRuntime();
+            try {
+                runtime.exec(deleteCmd);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPref.edit()
                 .putInt("startFragment", 0)

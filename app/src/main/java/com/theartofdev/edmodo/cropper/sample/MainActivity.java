@@ -15,6 +15,7 @@ package com.theartofdev.edmodo.cropper.sample;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,9 +44,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crop);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        setTitle(R.string.app_title_1);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            setTitle(R.string.app_title_1);
+        }
 
         if (savedInstanceState == null) {
             setMainFragmentByPreset(CropDemoPreset.RECT);
@@ -55,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        mCurrentFragment.updateCurrentCropViewOptions();
     }
 
     @Override
@@ -68,10 +71,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (mCurrentFragment != null && mCurrentFragment.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return mCurrentFragment != null && mCurrentFragment.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
 

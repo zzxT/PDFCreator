@@ -2,14 +2,14 @@
       xmlns:app="http://schemas.android.com/apk/res-auto" >
     <item
         android:id="@+id/crop_image_menu_rotate_right"
-        android:icon="@drawable/ic_rotate_right_white_48dp"
-        android:title="@string/main_action_rotate"
+        android:icon="@drawable/rotate_right"
+        android:title="@string/crop_image_menu_rotate_left"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/crop_image_menu_rotate_left"
-        android:icon="@drawable/ic_rotate_left_white_48dp"
-        android:title="@string/main_action_rotate"
+        android:icon="@drawable/rotate_left"
+        android:title="@string/crop_image_menu_rotate_left"
         app:showAsAction="ifRoom"/>
 
 </menu>

@@ -180,15 +180,6 @@ final class CropWindowHandler {
     /**
      * Determines which, if any, of the handles are pressed given the touch
      * coordinates, the bounding box, and the touch radius.
-     *
-     * @param x the x-coordinate of the touch point
-     * @param y the y-coordinate of the touch point
-     * @param left the x-coordinate of the left bound
-     * @param top the y-coordinate of the top bound
-     * @param right the x-coordinate of the right bound
-     * @param bottom the y-coordinate of the bottom bound
-     * @param targetRadius the target radius in pixels
-     * @return the Handle that was pressed; null if no Handle was pressed
      */
     public CropWindowMoveHandler getMoveHandler(float x, float y, float targetRadius, CropImageView.CropShape cropShape) {
         CropWindowMoveHandler.Type type = cropShape == CropImageView.CropShape.OVAL
@@ -202,15 +193,6 @@ final class CropWindowHandler {
     /**
      * Determines which, if any, of the handles are pressed given the touch
      * coordinates, the bounding box, and the touch radius.
-     *
-     * @param x the x-coordinate of the touch point
-     * @param y the y-coordinate of the touch point
-     * @param left the x-coordinate of the left bound
-     * @param top the y-coordinate of the top bound
-     * @param right the x-coordinate of the right bound
-     * @param bottom the y-coordinate of the bottom bound
-     * @param targetRadius the target radius in pixels
-     * @return the Handle that was pressed; null if no Handle was pressed
      */
     private CropWindowMoveHandler.Type getRectanglePressedMoveType(float x, float y, float targetRadius) {
         CropWindowMoveHandler.Type moveType = null;
@@ -244,14 +226,6 @@ final class CropWindowHandler {
     /**
      * Determines which, if any, of the handles are pressed given the touch
      * coordinates, the bounding box/oval, and the touch radius.
-     *
-     * @param x the x-coordinate of the touch point
-     * @param y the y-coordinate of the touch point
-     * @param left the x-coordinate of the left bound
-     * @param top the y-coordinate of the top bound
-     * @param right the x-coordinate of the right bound
-     * @param bottom the y-coordinate of the bottom bound
-     * @return the Handle that was pressed; null if no Handle was pressed
      */
     private CropWindowMoveHandler.Type getOvalPressedMoveType(float x, float y) {
 

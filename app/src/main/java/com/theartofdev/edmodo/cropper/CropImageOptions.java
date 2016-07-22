@@ -312,7 +312,7 @@ public class CropImageOptions implements Parcelable {
     /**
      * Create object from parcel.
      */
-    protected CropImageOptions(Parcel in) {
+    private CropImageOptions(Parcel in) {
         cropShape = CropImageView.CropShape.values()[in.readInt()];
         snapRadius = in.readFloat();
         touchRadius = in.readFloat();

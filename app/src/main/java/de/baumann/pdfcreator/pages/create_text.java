@@ -13,11 +13,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Paragraph;
@@ -28,6 +31,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import de.baumann.pdfcreator.R;
 
@@ -49,11 +55,21 @@ public class create_text extends Fragment {
             public void onClick(View view) {
                 final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+
+
+                LinearLayout layout = new LinearLayout(getActivity());
+                layout.setOrientation(LinearLayout.VERTICAL);
+                layout.setGravity(Gravity.CENTER_HORIZONTAL);
                 final EditText input = new EditText(getActivity());
+                input.setSingleLine(true);
+                layout.setPadding(25, 0, 25, 0);
                 input.setHint(R.string.app_hint);
-                final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
-                        .setView(input)
-                        .setMessage(R.string.app_title)
+                layout.addView(input);
+
+                final AlertDialog d = new AlertDialog.Builder(getActivity())
+                        .setView(layout)
+                        .setTitle(R.string.app_title)
+                        .setCancelable(true)
                         .setPositiveButton(R.string.toast_yes, new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int whichButton) {
@@ -102,8 +118,31 @@ public class create_text extends Fragment {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 dialog.cancel();
                             }
+                        })
+                        .setNeutralButton(R.string.app_title_date, null)
+                        .create();
+
+                d.setOnShowListener(new DialogInterface.OnShowListener() {
+
+                    @Override
+                    public void onShow(DialogInterface dialog) {
+
+                        Button b = d.getButton(AlertDialog.BUTTON_NEUTRAL);
+                        b.setOnClickListener(new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View view) {
+                                Date date = new Date();
+                                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                                String dateNow = format.format(date);
+                                input.append(String.valueOf(dateNow));
+
+                            }
                         });
-                dialog.show();
+                    }
+                });
+
+                d.show();
 
             }
         });

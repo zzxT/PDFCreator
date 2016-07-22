@@ -14,16 +14,12 @@ package com.theartofdev.edmodo.cropper.sample;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,10 +32,6 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -67,19 +59,6 @@ public final class MainFragment extends Fragment
         args.putString("DEMO_PRESET", demoPreset.name());
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public void updateCurrentCropViewOptions() {
-        CropImageViewOptions options = new CropImageViewOptions();
-        options.scaleType = mCropImageView.getScaleType();
-        options.cropShape = mCropImageView.getCropShape();
-        options.guidelines = mCropImageView.getGuidelines();
-        options.aspectRatio = mCropImageView.getAspectRatio();
-        options.fixAspectRatio = mCropImageView.isFixAspectRatio();
-        options.showCropOverlay = mCropImageView.isShowCropOverlay();
-        options.showProgressBar = mCropImageView.isShowProgressBar();
-        options.autoZoomEnabled = mCropImageView.isAutoZoomEnabled();
-        options.maxZoomLevel = mCropImageView.getMaxZoom();
     }
 
     @Override
@@ -119,13 +98,12 @@ public final class MainFragment extends Fragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/pdf_temp.jpg");
+        File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/pdf_temp.jpg");
 
         mCropImageView = (CropImageView) view.findViewById(R.id.cropImageView);
         mCropImageView.setOnSetImageUriCompleteListener(this);
         mCropImageView.setOnGetCroppedImageCompleteListener(this);
 
-        updateCurrentCropViewOptions();
 
         Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
         mCropImageView.setImageBitmap(myBitmap);

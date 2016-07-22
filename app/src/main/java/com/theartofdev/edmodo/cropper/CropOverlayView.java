@@ -72,7 +72,7 @@ public class CropOverlayView extends View {
     /**
      * Used for oval crop window shape or non-straight rotation drawing.
      */
-    private Path mPath = new Path();
+    private final Path mPath = new Path();
 
     /**
      * The bounding box around the Bitmap that we are cropping.
@@ -454,8 +454,6 @@ public class CropOverlayView extends View {
     /**
      * Set the initial crop window size and position. This is dependent on the
      * size and position of the image being cropped.
-     *
-     * @param mBitmapRect the bounding box around the image being cropped
      */
     private void initCropWindow() {
 
@@ -634,7 +632,7 @@ public class CropOverlayView extends View {
         float bottom = Math.min(BitmapUtils.getRectBottom(mBoundsPoints), getHeight());
 
         if (mCropShape == CropImageView.CropShape.RECTANGLE) {
-            if (!isNonStraightAngleRotated() || Build.VERSION.SDK_INT <= 17) {
+            if (isNonStraightAngleRotated() || Build.VERSION.SDK_INT <= 17) {
                 canvas.drawRect(left, top, right, rect.top, mBackgroundPaint);
                 canvas.drawRect(left, rect.bottom, right, bottom, mBackgroundPaint);
                 canvas.drawRect(left, rect.top, rect.left, rect.bottom, mBackgroundPaint);
@@ -874,7 +872,7 @@ public class CropOverlayView extends View {
         float right = BitmapUtils.getRectRight(mBoundsPoints);
         float bottom = BitmapUtils.getRectBottom(mBoundsPoints);
 
-        if (!isNonStraightAngleRotated()) {
+        if (isNonStraightAngleRotated()) {
             mCalcBounds.set(left, top, right, bottom);
             return false;
         } else {
@@ -944,7 +942,7 @@ public class CropOverlayView extends View {
      * Is the cropping image has been rotated by NOT 0,90,180 or 270 degrees.
      */
     private boolean isNonStraightAngleRotated() {
-        return mBoundsPoints[0] != mBoundsPoints[6] && mBoundsPoints[1] != mBoundsPoints[7];
+        return mBoundsPoints[0] == mBoundsPoints[6] || mBoundsPoints[1] == mBoundsPoints[7];
     }
 
     /**

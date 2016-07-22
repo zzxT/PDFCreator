@@ -183,6 +183,7 @@ final class BitmapCroppingWorkerTask extends AsyncTask<Void, Void, BitmapCroppin
                     return new Result(bitmap);
                 } else {
                     BitmapUtils.writeBitmapToUri(mContext, bitmap, mSaveUri, mSaveCompressFormat, mSaveCompressQuality);
+                    assert bitmap != null;
                     bitmap.recycle();
                     return new Result(mSaveUri);
                 }

@@ -1,44 +1,24 @@
 package de.baumann.pdfcreator;
 
-import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
-import android.text.SpannableString;
-import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageButton;
 import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -84,33 +64,14 @@ public class ActivityEditor extends AppCompatActivity implements SeekBar.OnSeekB
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveImage();
-
-                Snackbar.make(mGPUImageView, getString(R.string.toast_savedImage), Snackbar.LENGTH_INDEFINITE)
-                        .setAction("Action", null).show();
-
-                Timer timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        String path = Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/pdf_temp.jpg";
-
-                        Uri myUri= Uri.fromFile(new File(path));
-                        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                        sharingIntent.setClassName("de.baumann.pdfcreator", "de.baumann.pdfcreator.MainActivity");
-                        sharingIntent.setType("image/*");
-                        sharingIntent.putExtra(Intent.EXTRA_STREAM, myUri);
-                        sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        startActivity(sharingIntent);
-                        overridePendingTransition(0, 0);
-                        finish();
-                    }
-                }, 3000);
-
+                Intent intent = new Intent(ActivityEditor.this, MainActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                finish();
             }
         });
 
-        Bitmap myBitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/pdf_temp.jpg");
+        Bitmap myBitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/pdf_temp.jpg");
 
         h = myBitmap.getHeight();
         w = myBitmap.getWidth();
@@ -120,7 +81,7 @@ public class ActivityEditor extends AppCompatActivity implements SeekBar.OnSeekB
         seekBar.setOnSeekBarChangeListener(this);
 
 
-        File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/pdf_temp.jpg");
+        File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/pdf_temp.jpg");
         mGPUImageView = (GPUImageView) findViewById(R.id.gpuimage);
         assert mGPUImageView != null;
         mGPUImageView.setScaleType(mScaleTyp);
@@ -138,7 +99,7 @@ public class ActivityEditor extends AppCompatActivity implements SeekBar.OnSeekB
         Snackbar.make(mGPUImageView, getString(R.string.toast_savedImage), Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
 
-        String folder = "/pdf_temp/";
+        String folder = "/.pdf_temp/";
         String fileName = "pdf_temp.jpg";
 
         mGPUImageView.saveToPictures(folder, fileName, w, h, this);
@@ -183,7 +144,7 @@ public class ActivityEditor extends AppCompatActivity implements SeekBar.OnSeekB
 
         if (id == R.id.filter) {
 
-            File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/pdf_temp/pdf_temp.jpg");
+            File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/pdf_temp.jpg");
             mGPUImageView = (GPUImageView) findViewById(R.id.gpuimage);
             assert mGPUImageView != null;
             mGPUImageView.setImage(imgFile);

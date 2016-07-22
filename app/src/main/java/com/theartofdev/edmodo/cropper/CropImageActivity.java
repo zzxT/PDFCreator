@@ -14,24 +14,16 @@ package com.theartofdev.edmodo.cropper;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import java.io.File;
 import java.io.IOException;
 
 import de.baumann.pdfcreator.R;
 
-/**
- * Built-in activity for image cropping.<br>
- * Use {@link CropImage#activity(Uri)} to create a builder to start this activity.
- */
 public class CropImageActivity extends AppCompatActivity implements CropImageView.OnSetImageUriCompleteListener, CropImageView.OnSaveCroppedImageCompleteListener {
 
     /**
@@ -112,51 +104,11 @@ public class CropImageActivity extends AppCompatActivity implements CropImageVie
 
     //region: Private methods
 
-    /**
-     * Execute crop image and save the result tou output uri.
-     */
-    protected void cropImage() {
-        if (mOptions.noOutputImage) {
-            setResult(null, null);
-        } else {
-            Uri outputUri = getOutputUri();
-            mCropImageView.saveCroppedImageAsync(outputUri,
-                    mOptions.outputCompressFormat,
-                    mOptions.outputCompressQuality,
-                    mOptions.outputRequestWidth,
-                    mOptions.outputRequestHeight);
-        }
-    }
-
-    /**
-     * Rotate the image in the crop image view.
-     */
-    protected void rotateImage(int degrees) {
-        mCropImageView.rotateImage(degrees);
-    }
-
-    /**
-     * Get Android uri to save the cropped image into.<br>
-     * Use the given in options or create a temp file.
-     */
-    protected Uri getOutputUri() {
-        Uri outputUri = mOptions.outputUri;
-        if (outputUri.equals(Uri.EMPTY)) {
-            try {
-                String ext = mOptions.outputCompressFormat == Bitmap.CompressFormat.JPEG ? ".jpg" :
-                        mOptions.outputCompressFormat == Bitmap.CompressFormat.PNG ? ".png" : ".webp";
-                outputUri = Uri.fromFile(File.createTempFile("cropped", ext, getCacheDir()));
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to create temp file for output image", e);
-            }
-        }
-        return outputUri;
-    }
 
     /**
      * Result with cropped image data or error if failed.
      */
-    protected void setResult(Uri uri, Exception error) {
+    private void setResult(Uri uri, Exception error) {
         int resultCode = error == null ? RESULT_OK : CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE;
         setResult(resultCode, getResultIntent(uri, error));
         finish();
@@ -165,7 +117,7 @@ public class CropImageActivity extends AppCompatActivity implements CropImageVie
     /**
      * Cancel of cropping activity.
      */
-    protected void setResultCancel() {
+    private void setResultCancel() {
         setResult(RESULT_CANCELED);
         finish();
     }
@@ -173,7 +125,7 @@ public class CropImageActivity extends AppCompatActivity implements CropImageVie
     /**
      * Get intent instance to be used for the result of this activity.
      */
-    protected Intent getResultIntent(Uri uri, Exception error) {
+    private Intent getResultIntent(Uri uri, Exception error) {
         CropImage.ActivityResult result = new CropImage.ActivityResult(uri,
                 error,
                 mCropImageView.getCropPoints(),
@@ -182,24 +134,6 @@ public class CropImageActivity extends AppCompatActivity implements CropImageVie
         Intent intent = new Intent();
         intent.putExtra(CropImage.CROP_IMAGE_EXTRA_RESULT, result);
         return intent;
-    }
-
-    /**
-     * Update the color of a specific menu item to the given color.
-     */
-    private void updateMenuItemIconColor(Menu menu, int itemId, int color) {
-        MenuItem menuItem = menu.findItem(itemId);
-        if (menuItem != null) {
-            Drawable menuItemIcon = menuItem.getIcon();
-            if (menuItemIcon != null) {
-                try {
-                    menuItemIcon.mutate();
-                    menuItemIcon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-                    menuItem.setIcon(menuItemIcon);
-                } catch (Exception e) {
-                }
-            }
-        }
     }
     //endregion
 }

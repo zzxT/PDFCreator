@@ -62,14 +62,6 @@ final class CropWindowMoveHandler {
     private final PointF mTouchOffset = new PointF();
     //endregion
 
-    /**
-     * @param edgeMoveType the type of move this handler is executing
-     * @param horizontalEdge the primary edge associated with this handle; may be null
-     * @param verticalEdge the secondary edge associated with this handle; may be null
-     * @param cropWindowHandler menu_crop crop window handle to get and update the crop window edges
-     * @param touchX the location of the initial toch possition to measure move distance
-     * @param touchY the location of the initial toch possition to measure move distance
-     */
     public CropWindowMoveHandler(Type type, CropWindowHandler cropWindowHandler, float touchX, float touchY) {
         mType = type;
         mMinCropWidth = cropWindowHandler.getMinCropWidth();
@@ -88,16 +80,6 @@ final class CropWindowMoveHandler {
      * So a series of fixes is executed on "secondary" edges to adjust it by the "primary" edge movement.<br>
      * Primary is the edge directly affected by move type, secondary is the other edge.<br>
      * The crop window is changed by directly setting the Edge coordinates.
-     *
-     * @param x the new x-coordinate of this handle
-     * @param y the new y-coordinate of this handle
-     * @param bounds the bounding rectangle of the image
-     * @param viewWidth The bounding image view width used to know the crop overlay is at view edges.
-     * @param viewHeight The bounding image view height used to know the crop overlay is at view edges.
-     * @param parentView the parent View containing the image
-     * @param snapMargin the maximum distance (in pixels) at which the crop window should snap to the image
-     * @param fixedAspectRatio is the aspect ration fixed and 'targetAspectRatio' should be used
-     * @param aspectRatio the aspect ratio to maintain
      */
     public void move(RectF rect, float x, float y, RectF bounds, int viewWidth, int viewHeight, float snapMargin, boolean fixedAspectRatio, float aspectRatio) {
 
@@ -395,11 +377,6 @@ final class CropWindowMoveHandler {
     /**
      * Get the resulting x-position of the right edge of the crop window given
      * the handle's position and the image's bounding box and snap radius.
-     *
-     * @param right the position that the right edge is dragged to
-     * @param bounds the bounding box of the image that is being cropped
-     * @param viewWidth
-     * @param snapMargin the snap distance to the image edge (in pixels)
      */
     private void adjustRight(RectF rect, float right, RectF bounds, int viewWidth, float snapMargin, float aspectRatio, boolean topMoves, boolean bottomMoves) {
 
@@ -548,11 +525,6 @@ final class CropWindowMoveHandler {
     /**
      * Get the resulting y-position of the bottom edge of the crop window given
      * the handle's position and the image's bounding box and snap radius.
-     *
-     * @param bottom the position that the bottom edge is dragged to
-     * @param bounds the bounding box of the image that is being cropped
-     * @param viewHeight
-     * @param snapMargin the snap distance to the image edge (in pixels)
      */
     private void adjustBottom(RectF rect, float bottom, RectF bounds, int viewHeight, float snapMargin, float aspectRatio, boolean leftMoves, boolean rightMoves) {
 

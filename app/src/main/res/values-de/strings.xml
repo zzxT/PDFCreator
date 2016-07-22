@@ -2,9 +2,10 @@
 
     <string name="app_name">PDF Creator</string>
     <string name="app_title">Bitte Titel eingeben.</string>
+    <string name="app_title_date">Datum</string>
     <string name="app_title_edit">Bild bearbeiten</string>
     <string name="app_title_crop" tools:keep="@string/app_title_crop">Bild zuschneiden</string>
-    <string name="app_hint" tools:ignore="TypographyEllipsis">Was immer du willst...</string>
+    <string name="app_hint" tools:ignore="TypographyEllipsis">Was immer du willst ...</string>
     <string name="app_permissions">Du musst der App Zugriff auf den Gerätespeicher gewähren, damit PDF-Dateien
         gespeichert werden können. Danach solltest du die Anwendung komplett schließen oder das Telefon neu starten.
         Wenn du den Zugriff verweigerst und die Funktion später doch nutzen willst, kannst du die Berechtigung
@@ -15,6 +16,7 @@
     <string name="action_open">PDF öffnen</string>
     <string name="action_folder">Öffne Anwendungsordner</string>
     <string name="action_settings">Einstellungen</string>
+    <string name="action_save">Speichern</string>
     <string name="action_share_with">PDF teilen mit:</string>
     <string name="action_share_Text">Folgende Datei ist dem Anhang beigefügt:</string>
 
@@ -87,5 +89,13 @@
         <item>80</item>
         <item>60</item>
     </string-array>
+
+    //Image cropper
+
+    <string name="app_title_1">Bild zuschneiden</string>
+    <string name="app_title_2" tools:ignore="TypographyEllipsis">Speichere Bild ...</string>
+
+    <string name="crop_image_menu_rotate_left">Nach links drehen</string>
+    <string name="pick_image_intent_chooser_title">Quelle auswählen</string>
 
 </resources>

@@ -66,7 +66,7 @@ final class BitmapUtils {
     /**
      * Used to know the max texture size allowed to be rendered
      */
-    static int mMaxTextureSize;
+    private static int mMaxTextureSize;
 
     /**
      * used to save bitmaps during state save and restore so not to reload them.
@@ -189,7 +189,7 @@ final class BitmapUtils {
         try {
             // decode only the required image from URI, optionally sub-sampling if reqWidth/reqHeight is given.
             result = decodeSampledBitmapRegion(context, loadedImageUri, rect, width, height);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         if (result != null) {
@@ -300,7 +300,7 @@ final class BitmapUtils {
      * Fix the given rectangle if it doesn't confirm to aspect ration rule.<br>
      * Make sure that width and height are equal if 1:1 fixed aspect ratio is requested.
      */
-    public static void fixRectForAspectRatio(Rect rect, int aspectRatioX, int aspectRatioY) {
+    private static void fixRectForAspectRatio(Rect rect, int aspectRatioX, int aspectRatioY) {
         if (aspectRatioX == aspectRatioY && rect.width() != rect.height()) {
             if (rect.height() > rect.width()) {
                 rect.bottom -= rect.height() - rect.width();
@@ -474,6 +474,7 @@ final class BitmapUtils {
         try {
             String[] proj = {MediaStore.Images.Media.DATA};
             cursor = context.getContentResolver().query(uri, proj, null, null, null);
+            assert cursor != null;
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
             String realPath = cursor.getString(column_index);
