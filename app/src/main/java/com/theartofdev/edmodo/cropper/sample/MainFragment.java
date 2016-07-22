@@ -12,20 +12,25 @@
 
 package com.theartofdev.edmodo.cropper.sample;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -36,6 +41,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.baumann.pdfcreator.R;
+import de.baumann.pdfcreator.UserSettingsActivity;
 
 /**
  * The fragment that will show the Image Cropping UI by requested preset.
@@ -114,11 +120,49 @@ public final class MainFragment extends Fragment
         if (item.getItemId() == R.id.crop_image_menu_rotate_right) {
             mCropImageView.rotateImage(90);
             return true;
+
         } else if (item.getItemId() == R.id.crop_image_menu_rotate_left) {
             mCropImageView.rotateImage(270);
             return true;
+
         } else if (item.getItemId() == android.R.id.home) {
             Intent intent = new Intent(getActivity(), de.baumann.pdfcreator.MainActivity.class);
+            startActivity(intent);
+            getActivity().overridePendingTransition(0, 0);
+            getActivity().finish();
+
+        } else if (item.getItemId() == R.id.action_folder) {
+
+            String folder;
+
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+            File directory = new File(Environment.getExternalStorageDirectory() + folder);
+
+            Intent target = new Intent(Intent.ACTION_VIEW);
+            target.setDataAndType(Uri.fromFile(directory), "resource/folder");
+
+            try {
+                startActivity (target);
+            } catch (ActivityNotFoundException e) {
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+
+                View toastLayout = inflater.inflate(R.layout.toast,
+                        (ViewGroup) getActivity().findViewById(R.id.toast_root_view));
+
+                TextView header = (TextView) toastLayout.findViewById(R.id.toast_message);
+                header.setText(R.string.toast_install_folder);
+
+                Toast toast = new Toast(getActivity().getApplicationContext());
+                toast.setGravity(Gravity.FILL_HORIZONTAL | Gravity.BOTTOM, 0, 0);
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(toastLayout);
+                toast.show();
+            }
+
+        } else if (item.getItemId() == R.id.action_settings) {
+
+            Intent intent = new Intent(getActivity(), UserSettingsActivity.class);
             startActivity(intent);
             getActivity().overridePendingTransition(0, 0);
             getActivity().finish();

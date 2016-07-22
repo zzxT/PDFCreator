@@ -1,22 +1,30 @@
 package de.baumann.pdfcreator;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -165,6 +173,44 @@ public class ActivityEditor extends AppCompatActivity implements SeekBar.OnSeekB
 
         if (id == android.R.id.home) {
             Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+            finish();
+        }
+
+        if (id == R.id.action_folder) {
+
+            String folder;
+
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+            folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+            File directory = new File(Environment.getExternalStorageDirectory() + folder);
+
+            Intent target = new Intent(Intent.ACTION_VIEW);
+            target.setDataAndType(Uri.fromFile(directory), "resource/folder");
+
+            try {
+                startActivity (target);
+            } catch (ActivityNotFoundException e) {
+                LayoutInflater inflater = getLayoutInflater();
+
+                View toastLayout = inflater.inflate(R.layout.toast,
+                        (ViewGroup) findViewById(R.id.toast_root_view));
+
+                TextView header = (TextView) toastLayout.findViewById(R.id.toast_message);
+                header.setText(R.string.toast_install_folder);
+
+                Toast toast = new Toast(getApplicationContext());
+                toast.setGravity(Gravity.FILL_HORIZONTAL | Gravity.BOTTOM, 0, 0);
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(toastLayout);
+                toast.show();
+            }
+        }
+
+        if (id == R.id.action_settings) {
+
+            Intent intent = new Intent(this, UserSettingsActivity.class);
             startActivity(intent);
             overridePendingTransition(0, 0);
             finish();

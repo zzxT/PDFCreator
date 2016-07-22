@@ -34,6 +34,8 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import de.baumann.pdfcreator.R;
 
@@ -63,7 +65,7 @@ public class create_text extends Fragment {
                 layout.setGravity(Gravity.CENTER_HORIZONTAL);
                 final EditText input = new EditText(getActivity());
                 input.setSingleLine(true);
-                layout.setPadding(25, 0, 25, 0);
+                layout.setPadding(25, 0, 50, 0);
                 input.setHint(R.string.app_hint);
                 layout.addView(input);
 
@@ -112,6 +114,7 @@ public class create_text extends Fragment {
                                 if(pdfFile.exists()){
                                     pdfFile.delete();
                                 }
+                                edit.setText("");
                             }
                         })
                         .setNegativeButton(R.string.toast_cancel, new DialogInterface.OnClickListener() {
@@ -142,9 +145,7 @@ public class create_text extends Fragment {
                         });
                     }
                 });
-
                 d.show();
-
             }
         });
 

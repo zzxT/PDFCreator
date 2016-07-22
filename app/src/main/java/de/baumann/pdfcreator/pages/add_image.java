@@ -149,7 +149,7 @@ public class add_image extends Fragment {
                 if(imgFile.exists()){
                     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     sharedPref.edit()
-                            .putInt("startFragment", 2)
+                            .putInt("startFragment", 1)
                             .putBoolean("appStarted", false)
                             .apply();
 
@@ -172,7 +172,7 @@ public class add_image extends Fragment {
                 if(imgFile.exists()){
                     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     sharedPref.edit()
-                            .putInt("startFragment", 2)
+                            .putInt("startFragment", 1)
                             .putBoolean("appStarted", false)
                             .apply();
 
@@ -469,7 +469,7 @@ public class add_image extends Fragment {
 
                 in = new FileInputStream(path);
                 out = new FileOutputStream(Environment.getExternalStorageDirectory() +
-                        folder + "backups/" + title + ".pdf");
+                        folder + "pdf_backups/" + title + ".pdf");
 
                 byte[] buffer = new byte[1024];
                 int read;

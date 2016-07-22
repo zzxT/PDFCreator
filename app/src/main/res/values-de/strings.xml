@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name">PDF Creator</string>
-    <string name="app_title">Bitte Titel eingeben.</string>
+    <string name="app_title">Bitte Titel eingeben:</string>
     <string name="app_title_date">Datum</string>
     <string name="app_title_edit">Bild bearbeiten</string>
     <string name="app_title_crop" tools:keep="@string/app_title_crop">Bild zuschneiden</string>
@@ -24,6 +24,7 @@
     <string name="create_text">Text zu PDF</string>
     <string name="add_image">+ Bild</string>
     <string name="add_text" tools:ignore="TypographyEllipsis">+ Text | ...</string>
+    <string name="add_text_delete">Seiten löschen</string>
     <string name="add_text_hint">Text Schreiben oder einfügen</string>
     <string name="add_text_hint2">Welche Seiten möchtest du behalten?</string>
 
@@ -69,10 +70,10 @@
     <string name="pref_backup">Sicherung</string>
     <string name="pref_backup_summary">Sollen PDF-Dateien vor dem Bearbeiten (z.B.: Hinzufügen oder Löschen von Seiten) gesichert werden?</string>
 
-    <string name="pref_folderDef">Standard</string>
+    <string name="pref_folderDef">Standardverzeichnis</string>
     <string name="pref_folderDef_summary">Benutze das Standardverzeichnis: \"/Android/data/de.baumann.pdf/\".</string>
 
-    <string name="pref_folder">Eigenes</string>
+    <string name="pref_folder">Eigenes Verzeichnis</string>
     <string name="pref_folder_summary">Ändere das Verzeichnis in dem neue PDF-Dateien und Sicherungen gespeichert werden.
         Der eingegebene Pfad muss mit einem \"/\" anfangen und enden, wie z.B. \"/Download/PDF/\". Noch nicht vorhandene Verzeichnisse
         werden automatisch erstellt.</string>

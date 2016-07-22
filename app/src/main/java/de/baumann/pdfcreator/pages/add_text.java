@@ -15,11 +15,14 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -37,8 +40,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.baumann.pdfcreator.R;
 
@@ -68,6 +74,7 @@ public class add_text extends Fragment {
                 backup();
                 createPDF();
                 deleteTemp();
+                edit.setText("");
             }
         });
 
@@ -91,12 +98,21 @@ public class add_text extends Fragment {
                 final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 pages = sharedPref.getString("deletePages", null);
 
+                LinearLayout layout = new LinearLayout(getActivity());
+                layout.setOrientation(LinearLayout.VERTICAL);
+                layout.setGravity(Gravity.CENTER_HORIZONTAL);
                 final EditText input = new EditText(getActivity());
+                input.setSingleLine(true);
+                layout.setPadding(25, 0, 50, 0);
                 input.setHint("1-5,7,15-20");
                 input.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
-                        .setView(input)
+                layout.addView(input);
+
+                final AlertDialog d = new AlertDialog.Builder(getActivity())
+                        .setView(layout)
+                        .setTitle(R.string.add_text_delete)
                         .setMessage(R.string.add_text_hint2)
+                        .setCancelable(true)
                         .setPositiveButton(R.string.toast_yes, new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int whichButton) {
@@ -113,8 +129,10 @@ public class add_text extends Fragment {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 dialog.cancel();
                             }
-                        });
-                dialog.show();
+                        })
+                        .create();
+
+                d.show();
             }
         });
 
@@ -403,7 +421,7 @@ public class add_text extends Fragment {
 
                 in = new FileInputStream(path);
                 out = new FileOutputStream(Environment.getExternalStorageDirectory() +
-                        folder + "backups/" + title + ".pdf");
+                        folder + "pdf_backups/" + title + ".pdf");
 
                 byte[] buffer = new byte[1024];
                 int read;

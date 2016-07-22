@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name">PDF Creator</string>
-    <string name="app_title">Please enter title.</string>
+    <string name="app_title">Please enter title:</string>
     <string name="app_title_date">Date</string>
     <string name="app_title_edit">Edit image</string>
     <string name="app_title_crop" tools:keep="@string/app_title_crop">Crop image</string>
@@ -23,6 +23,7 @@
     <string name="create_text">Text to PDF</string>
     <string name="add_image">+ image</string>
     <string name="add_text" tools:ignore="TypographyEllipsis">+ text | ...</string>
+    <string name="add_text_delete">Delete pages</string>
     <string name="add_text_hint">Write or paste text</string>
     <string name="add_text_hint2">Which pages do you want to keep?</string>
 
@@ -68,10 +69,10 @@
     <string name="pref_backup">Backup</string>
     <string name="pref_backup_summary">Do you want to backup pdf files before manipulating, e.g. deleting or adding pages?</string>
 
-    <string name="pref_folderDef">Default</string>
+    <string name="pref_folderDef">Default directory</string>
     <string name="pref_folderDef_summary">Use the default directory: \"/Android/data/de.baumann.pdf/\".</string>
 
-    <string name="pref_folder">Custom</string>
+    <string name="pref_folder">Custom directory</string>
     <string name="pref_folder_summary">Change the default app directory, where new PDF files and backups will be saved.
         The path zu desired folder must begin and end with \"/\" like \"/Download/PDF/\". If the desired directory does not exist,
         it will be generated automatically.</string>

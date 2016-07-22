@@ -87,7 +87,7 @@ public class create_image extends Fragment {
                     layout.setGravity(Gravity.CENTER_HORIZONTAL);
                     final EditText input = new EditText(getActivity());
                     input.setSingleLine(true);
-                    layout.setPadding(25, 0, 25, 0);
+                    layout.setPadding(25, 0, 50, 0);
                     input.setHint(R.string.app_hint);
                     layout.addView(input);
 
