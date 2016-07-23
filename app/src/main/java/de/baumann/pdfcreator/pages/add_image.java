@@ -39,6 +39,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import de.baumann.pdfcreator.ActivityEditor;
 import de.baumann.pdfcreator.R;
@@ -187,18 +189,23 @@ public class add_image extends Fragment {
             }
         });
 
-        // Get intent, action and MIME type
-        Intent intent = getActivity().getIntent();
-        String action = intent.getAction();
-        String type = intent.getType();
-
-        if (Intent.ACTION_SEND.equals(action) && type != null) {
-            if (type.startsWith("image/")) {
-                handleSendImage(intent); // Handle single image being sent
-            }
-        }
-
         img=(ImageView)rootView.findViewById(R.id.imageView);
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/pdf_temp.jpg");
+                if(imgFile.exists()){
+                    ib_4.setVisibility(View.VISIBLE);
+                    ib_6.setVisibility(View.VISIBLE);
+                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                    img.setImageBitmap(myBitmap);
+                } else {
+                    ib_4.setVisibility(View.GONE);
+                    ib_6.setVisibility(View.GONE);
+                }
+            }
+        });
+
         File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/pdf_temp.jpg");
         if(imgFile.exists()){
             ib_4.setVisibility(View.VISIBLE);
@@ -211,32 +218,6 @@ public class add_image extends Fragment {
         }
 
         return rootView;
-    }
-
-    private void handleSendImage(Intent intent) {
-        Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-        if (imageUri != null) {
-            // Update UI to reflect image being shared
-            img.setImageURI(imageUri);
-
-            BitmapDrawable drawable = (BitmapDrawable) img.getDrawable();
-            Bitmap bitmap = drawable.getBitmap();
-
-            File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/pdf_temp.jpg");
-
-            // Encode the file as a JPEG image.
-            FileOutputStream outStream;
-            try {
-
-                outStream = new FileOutputStream(imgFile);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, imgquality_int, outStream);
-                outStream.flush();
-                outStream.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private void createPDF() {
@@ -346,7 +327,7 @@ public class add_image extends Fragment {
 
     private void selectImage_1() {
 
-        final CharSequence[] options = {getString(R.string.goal_camera),getString(R.string.goal_gallery),getString(R.string.goal_gallery2), getString(R.string.goal_cancel)};
+        final CharSequence[] options = {getString(R.string.goal_camera),getString(R.string.goal_gallery),getString(R.string.goal_cancel)};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setItems(options, new DialogInterface.OnClickListener() {
@@ -362,10 +343,6 @@ public class add_image extends Fragment {
                 } else if (options[item].equals(getString(R.string.goal_gallery))) {
                     Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(intent, 2);
-
-                } else if (options[item].equals(getString(R.string.goal_gallery2))) {
-                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(intent, 3);
 
                 } else if (options[item].equals(getString(R.string.goal_cancel))) {
                     dialog.dismiss();
@@ -426,27 +403,6 @@ public class add_image extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            } else if (requestCode == 3) {
-                Uri selectedImage = data.getData();
-                img.setImageURI(selectedImage);
-
-                BitmapDrawable drawable = (BitmapDrawable) img.getDrawable();
-                Bitmap bitmap = drawable.getBitmap();
-
-                File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/pdf_temp.jpg");
-
-                // Encode the file as a PNG image.
-                FileOutputStream outStream;
-                try {
-
-                    outStream = new FileOutputStream(imgFile);
-                    bitmap.compress(Bitmap.CompressFormat.PNG, imgquality_int, outStream);
-                    outStream.flush();
-                    outStream.close();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             } else if (requestCode == 4) {
                 String FilePath = data.getData().getPath();
                 String FileTitle = FilePath.substring(FilePath.lastIndexOf("/")+1);
@@ -454,6 +410,7 @@ public class add_image extends Fragment {
                 sharedPref.edit().putString("pathPDF", FilePath).apply();
                 sharedPref.edit().putString("title", FileTitle).apply();
             }
+
             int PIC_CROP = 1;
             if (requestCode == PIC_CROP) {
                 if (data != null) {

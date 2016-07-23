@@ -38,8 +38,7 @@
     <string name="toast_noImage">Kein Bild vorhanden.</string>
     <string name="toast_savedImage">Bitte warten. Bild wird gespeichert.</string>
 
-    <string name="goal_gallery">Aus der Galerie aussuchen (JPEG)</string>
-    <string name="goal_gallery2">Aus der Galerie aussuchen (PNG)</string>
+    <string name="goal_gallery">Aus der Galerie aussuchen</string>
     <string name="goal_camera">Foto aufnehmen</string>
     <string name="goal_cancel">Abbrechen</string>
 

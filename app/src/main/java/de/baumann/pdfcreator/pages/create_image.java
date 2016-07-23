@@ -381,7 +381,7 @@ public class create_image extends Fragment {
 
     private void selectImage_1() {
 
-        final CharSequence[] options = {getString(R.string.goal_camera),getString(R.string.goal_gallery),getString(R.string.goal_gallery2), getString(R.string.goal_cancel)};
+        final CharSequence[] options = {getString(R.string.goal_camera),getString(R.string.goal_gallery), getString(R.string.goal_cancel)};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setItems(options, new DialogInterface.OnClickListener() {
@@ -397,10 +397,6 @@ public class create_image extends Fragment {
                 } else if (options[item].equals(getString(R.string.goal_gallery))) {
                     Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(intent, 2);
-
-                } else if (options[item].equals(getString(R.string.goal_gallery2))) {
-                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(intent, 3);
 
                 } else if (options[item].equals(getString(R.string.goal_cancel))) {
                     dialog.dismiss();
@@ -461,28 +457,8 @@ public class create_image extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            } else if (requestCode == 3) {
-                Uri selectedImage = data.getData();
-                img.setImageURI(selectedImage);
-
-                BitmapDrawable drawable = (BitmapDrawable) img.getDrawable();
-                Bitmap bitmap = drawable.getBitmap();
-
-                File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/pdf_temp.jpg");
-
-                // Encode the file as a PNG image.
-                FileOutputStream outStream;
-                try {
-
-                    outStream = new FileOutputStream(imgFile);
-                    bitmap.compress(Bitmap.CompressFormat.PNG, imgquality_int, outStream);
-                    outStream.flush();
-                    outStream.close();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
+
             int PIC_CROP = 1;
             if (requestCode == PIC_CROP) {
                 if (data != null) {

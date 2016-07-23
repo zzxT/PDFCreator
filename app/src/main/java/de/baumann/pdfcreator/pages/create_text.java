@@ -59,7 +59,6 @@ public class create_text extends Fragment {
                 final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
 
-
                 LinearLayout layout = new LinearLayout(getActivity());
                 layout.setOrientation(LinearLayout.VERTICAL);
                 layout.setGravity(Gravity.CENTER_HORIZONTAL);

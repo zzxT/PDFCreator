@@ -37,8 +37,7 @@
     <string name="toast_noImage">No image to load.</string>
     <string name="toast_savedImage">Please wait. Saving image.</string>
 
-    <string name="goal_gallery">Choose from gallery (JPEG)</string>
-    <string name="goal_gallery2">Choose from gallery (PNG)</string>
+    <string name="goal_gallery">Choose from gallery</string>
     <string name="goal_camera">Take photo</string>
     <string name="goal_cancel">Cancel</string>
 
