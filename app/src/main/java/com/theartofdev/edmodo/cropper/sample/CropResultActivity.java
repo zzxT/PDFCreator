@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import de.baumann.pdfcreator.R;
+import de.baumann.pdfcreator.*;
 
 @SuppressWarnings("UnusedParameters")
 public final class CropResultActivity extends AppCompatActivity {
@@ -53,8 +53,13 @@ public final class CropResultActivity extends AppCompatActivity {
         textview = ((TextView) findViewById(R.id.resultImageText));
 
         if (mImage != null) {
+
             assert imageView != null;
             imageView.setImageBitmap(mImage);
+
+            Snackbar.make(imageView, getString(R.string.toast_savedImage), Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Action", null).show();
+
             double ratio = ((int) (10 * mImage.getWidth() / (double) mImage.getHeight())) / 10d;
             int byteCount = 0;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB_MR1) {
@@ -82,30 +87,14 @@ public final class CropResultActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            Snackbar.make(imageView, getString(R.string.toast_savedImage), Snackbar.LENGTH_INDEFINITE)
-                    .setAction("Action", null).show();
-
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    String path = Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/pdf_temp.jpg";
-
-                    Uri myUri= Uri.fromFile(new File(path));
-                    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                    sharingIntent.setClassName("de.baumann.pdfcreator", "de.baumann.pdfcreator.MainActivity");
-                    sharingIntent.setType("image/*");
-                    sharingIntent.putExtra(Intent.EXTRA_STREAM, myUri);
-                    sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    startActivity(sharingIntent);
-                    overridePendingTransition(0, 0);
-                    if (mImage != null) {
-                        mImage.recycle();
-                        mImage = null;
-                    }
-                    finish();
-                }
-            }, 3000);
+            Intent intent = new Intent(CropResultActivity.this, de.baumann.pdfcreator.MainActivity.class);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+            if (mImage != null) {
+                mImage.recycle();
+                mImage = null;
+            }
+            finish();
 
         } else {
             Intent intent = getIntent();

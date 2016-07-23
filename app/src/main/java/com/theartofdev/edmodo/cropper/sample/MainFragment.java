@@ -84,8 +84,6 @@ public final class MainFragment extends Fragment
             @Override
             public void onClick(View view) {
 
-
-
                 mCropImageView.getCroppedImageAsync();
                 Timer timer = new Timer();
                 timer.schedule(new TimerTask() {

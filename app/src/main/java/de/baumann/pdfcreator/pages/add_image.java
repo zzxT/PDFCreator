@@ -187,6 +187,17 @@ public class add_image extends Fragment {
             }
         });
 
+        // Get intent, action and MIME type
+        Intent intent = getActivity().getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if (type.startsWith("image/")) {
+                handleSendImage(intent); // Handle single image being sent
+            }
+        }
+
         img=(ImageView)rootView.findViewById(R.id.imageView);
         File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/pdf_temp.jpg");
         if(imgFile.exists()){
@@ -200,6 +211,32 @@ public class add_image extends Fragment {
         }
 
         return rootView;
+    }
+
+    private void handleSendImage(Intent intent) {
+        Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        if (imageUri != null) {
+            // Update UI to reflect image being shared
+            img.setImageURI(imageUri);
+
+            BitmapDrawable drawable = (BitmapDrawable) img.getDrawable();
+            Bitmap bitmap = drawable.getBitmap();
+
+            File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/pdf_temp.jpg");
+
+            // Encode the file as a JPEG image.
+            FileOutputStream outStream;
+            try {
+
+                outStream = new FileOutputStream(imgFile);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, imgquality_int, outStream);
+                outStream.flush();
+                outStream.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void createPDF() {

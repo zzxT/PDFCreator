@@ -22,4 +22,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"/>
 
+    <ImageView
+        android:id="@+id/resultImageView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:ignore="ContentDescription" />
+
 </merge>
