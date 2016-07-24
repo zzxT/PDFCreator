@@ -34,8 +34,6 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import de.baumann.pdfcreator.R;
 
@@ -56,95 +54,103 @@ public class create_text extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
 
-                LinearLayout layout = new LinearLayout(getActivity());
-                layout.setOrientation(LinearLayout.VERTICAL);
-                layout.setGravity(Gravity.CENTER_HORIZONTAL);
-                final EditText input = new EditText(getActivity());
-                input.setSingleLine(true);
-                layout.setPadding(25, 0, 50, 0);
-                input.setHint(R.string.app_hint);
-                layout.addView(input);
+                String paragraph = edit.getText().toString().trim();
 
-                final AlertDialog d = new AlertDialog.Builder(getActivity())
-                        .setView(layout)
-                        .setTitle(R.string.app_title)
-                        .setCancelable(true)
-                        .setPositiveButton(R.string.toast_yes, new DialogInterface.OnClickListener() {
+                if (paragraph.isEmpty()) {
+                    Snackbar.make(edit, getString(R.string.toast_noText), Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                } else {
+                    final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
 
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                title = input.getText().toString().trim();
-                                sharedPref.edit()
-                                        .putString("title", title)
-                                        .putString("pathPDF", Environment.getExternalStorageDirectory() +  folder + title + ".pdf")
-                                        .apply();
-                                createPDF();
+                    LinearLayout layout = new LinearLayout(getActivity());
+                    layout.setOrientation(LinearLayout.VERTICAL);
+                    layout.setGravity(Gravity.CENTER_HORIZONTAL);
+                    final EditText input = new EditText(getActivity());
+                    input.setSingleLine(true);
+                    layout.setPadding(25, 0, 50, 0);
+                    input.setHint(R.string.app_hint);
+                    layout.addView(input);
 
-                                InputStream in;
-                                OutputStream out;
+                    final AlertDialog d = new AlertDialog.Builder(getActivity())
+                            .setView(layout)
+                            .setTitle(R.string.app_title)
+                            .setCancelable(true)
+                            .setPositiveButton(R.string.toast_yes, new DialogInterface.OnClickListener() {
 
-                                try {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    title = input.getText().toString().trim();
+                                    sharedPref.edit()
+                                            .putString("title", title)
+                                            .putString("pathPDF", Environment.getExternalStorageDirectory() +  folder + title + ".pdf")
+                                            .apply();
+                                    createPDF();
 
-                                    title = sharedPref.getString("title", null);
-                                    folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
-                                    String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
-                                            folder + title + ".pdf");
+                                    InputStream in;
+                                    OutputStream out;
 
-                                    in = new FileInputStream(Environment.getExternalStorageDirectory() +  "/" + title + ".pdf");
-                                    out = new FileOutputStream(path);
+                                    try {
 
-                                    byte[] buffer = new byte[1024];
-                                    int read;
-                                    while ((read = in.read(buffer)) != -1) {
-                                        out.write(buffer, 0, read);
+                                        title = sharedPref.getString("title", null);
+                                        folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+                                        String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                                                folder + title + ".pdf");
+
+                                        in = new FileInputStream(Environment.getExternalStorageDirectory() +  "/" + title + ".pdf");
+                                        out = new FileOutputStream(path);
+
+                                        byte[] buffer = new byte[1024];
+                                        int read;
+                                        while ((read = in.read(buffer)) != -1) {
+                                            out.write(buffer, 0, read);
+                                        }
+                                        in.close();
+
+                                        // write the output file
+                                        out.flush();
+                                        out.close();
+                                    } catch (Exception e) {
+                                        Log.e("tag", e.getMessage());
                                     }
-                                    in.close();
 
-                                    // write the output file
-                                    out.flush();
-                                    out.close();
-                                } catch (Exception e) {
-                                    Log.e("tag", e.getMessage());
+                                    File pdfFile = new File(Environment.getExternalStorageDirectory() +  "/" + title + ".pdf");
+                                    if(pdfFile.exists()){
+                                        pdfFile.delete();
+                                    }
+                                    edit.setText("");
                                 }
+                            })
+                            .setNegativeButton(R.string.toast_cancel, new DialogInterface.OnClickListener() {
 
-                                File pdfFile = new File(Environment.getExternalStorageDirectory() +  "/" + title + ".pdf");
-                                if(pdfFile.exists()){
-                                    pdfFile.delete();
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    dialog.cancel();
                                 }
-                                edit.setText("");
-                            }
-                        })
-                        .setNegativeButton(R.string.toast_cancel, new DialogInterface.OnClickListener() {
+                            })
+                            .setNeutralButton(R.string.app_title_date, null)
+                            .create();
 
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                dialog.cancel();
-                            }
-                        })
-                        .setNeutralButton(R.string.app_title_date, null)
-                        .create();
+                    d.setOnShowListener(new DialogInterface.OnShowListener() {
 
-                d.setOnShowListener(new DialogInterface.OnShowListener() {
+                        @Override
+                        public void onShow(DialogInterface dialog) {
 
-                    @Override
-                    public void onShow(DialogInterface dialog) {
+                            Button b = d.getButton(AlertDialog.BUTTON_NEUTRAL);
+                            b.setOnClickListener(new View.OnClickListener() {
 
-                        Button b = d.getButton(AlertDialog.BUTTON_NEUTRAL);
-                        b.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Date date = new Date();
+                                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                                    String dateNow = format.format(date);
+                                    input.append(String.valueOf(dateNow));
 
-                            @Override
-                            public void onClick(View view) {
-                                Date date = new Date();
-                                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                                String dateNow = format.format(date);
-                                input.append(String.valueOf(dateNow));
-
-                            }
-                        });
-                    }
-                });
-                d.show();
+                                }
+                            });
+                        }
+                    });
+                    d.show();
+                }
             }
         });
 
@@ -158,6 +164,12 @@ public class create_text extends Fragment {
 
         ImageButton ib_3 = (ImageButton) rootView.findViewById(R.id.imageButton_3);
         ib_3.setVisibility(View.GONE);
+
+        ImageButton ib_4 = (ImageButton) rootView.findViewById(R.id.imageButton_4);
+        ib_4.setVisibility(View.GONE);
+
+        ImageButton ib_5 = (ImageButton) rootView.findViewById(R.id.imageButton_5);
+        ib_5.setVisibility(View.GONE);
 
         // Get intent, action and MIME type
         Intent intent = getActivity().getIntent();

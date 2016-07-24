@@ -73,47 +73,55 @@ public class add_image extends Fragment {
             @Override
             public void onClick(View view) {
                 File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/pdf_temp.jpg");
+
                 if(imgFile.exists()){
-
-                    backup();
-
-                    ib_4.setVisibility(View.GONE);
-                    ib_6.setVisibility(View.GONE);
 
                     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     title = sharedPref.getString("title", null);
+                    folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+                    String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                            folder + title + ".pdf");
 
-                    createPDF();
+                    File pdfFile = new File(path);
 
-                    InputStream in;
-                    OutputStream out;
+                    if (pdfFile.exists()) {
+                        backup();
 
-                    try {
+                        ib_4.setVisibility(View.GONE);
+                        ib_6.setVisibility(View.GONE);
 
                         title = sharedPref.getString("title", null);
-                        folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
-                        String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
-                                folder + title + ".pdf");
 
-                        in = new FileInputStream(Environment.getExternalStorageDirectory() +  "/" + title + ".pdf");
-                        out = new FileOutputStream(path);
+                        createPDF();
 
-                        byte[] buffer = new byte[1024];
-                        int read;
-                        while ((read = in.read(buffer)) != -1) {
-                            out.write(buffer, 0, read);
+                        InputStream in;
+                        OutputStream out;
+
+                        try {
+
+                            in = new FileInputStream(Environment.getExternalStorageDirectory() +  "/" + title + ".pdf");
+                            out = new FileOutputStream(path);
+
+                            byte[] buffer = new byte[1024];
+                            int read;
+                            while ((read = in.read(buffer)) != -1) {
+                                out.write(buffer, 0, read);
+                            }
+                            in.close();
+                        } catch (Exception e) {
+                            Log.e("tag", e.getMessage());
                         }
-                        in.close();
-                    } catch (Exception e) {
-                        Log.e("tag", e.getMessage());
+
+                        img.setImageResource(R.drawable.image);
+
+                        if(pdfFile.exists()){
+                            pdfFile.delete();
+                        }
+                    } else {
+                        Snackbar.make(img, getString(R.string.toast_noPDF), Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
                     }
 
-                    img.setImageResource(R.drawable.image);
-
-                    File pdfFile = new File(Environment.getExternalStorageDirectory() +  "/" + title + ".pdf");
-                    if(pdfFile.exists()){
-                        pdfFile.delete();
-                    }
                 } else {
                     Snackbar.make(img, getString(R.string.toast_noImage), Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
@@ -151,7 +159,7 @@ public class add_image extends Fragment {
                 if(imgFile.exists()){
                     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     sharedPref.edit()
-                            .putInt("startFragment", 1)
+                            .putInt("startFragment", 2)
                             .putBoolean("appStarted", false)
                             .apply();
 
@@ -174,7 +182,7 @@ public class add_image extends Fragment {
                 if(imgFile.exists()){
                     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     sharedPref.edit()
-                            .putInt("startFragment", 1)
+                            .putInt("startFragment", 2)
                             .putBoolean("appStarted", false)
                             .apply();
 
@@ -190,22 +198,6 @@ public class add_image extends Fragment {
         });
 
         img=(ImageView)rootView.findViewById(R.id.imageView);
-        img.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/pdf_temp.jpg");
-                if(imgFile.exists()){
-                    ib_4.setVisibility(View.VISIBLE);
-                    ib_6.setVisibility(View.VISIBLE);
-                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                    img.setImageBitmap(myBitmap);
-                } else {
-                    ib_4.setVisibility(View.GONE);
-                    ib_6.setVisibility(View.GONE);
-                }
-            }
-        });
-
         File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/pdf_temp.jpg");
         if(imgFile.exists()){
             ib_4.setVisibility(View.VISIBLE);

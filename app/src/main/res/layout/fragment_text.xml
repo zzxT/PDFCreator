@@ -34,10 +34,9 @@
         android:src="@drawable/ic_file_pdf_white_48dp"
         android:scaleType="fitCenter"
         android:layout_marginRight="@dimen/fab_margin"
-        android:layout_below="@+id/imageButton_3"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="4dp"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"
+        android:layout_below="@+id/imageButton_5"
+        android:layout_alignParentEnd="true" />
 
     <ImageButton
         android:layout_width="56dp"
@@ -63,5 +62,28 @@
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="4dp"
         tools:ignore="ContentDescription" />
+
+    <ImageButton
+        tools:ignore="ContentDescription"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:id="@+id/imageButton_4"
+        android:scaleType="fitCenter"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_below="@+id/imageButton_3"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="4dp"
+        android:src="@drawable/ic_security_white_48dp" />
+
+    <ImageButton
+        tools:ignore="ContentDescription"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:id="@+id/imageButton_5"
+        android:scaleType="fitCenter"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_below="@+id/imageButton_4"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_pound_white_48dp" />
 
 </RelativeLayout>

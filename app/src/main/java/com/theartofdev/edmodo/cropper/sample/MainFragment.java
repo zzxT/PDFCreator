@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
@@ -83,6 +84,9 @@ public final class MainFragment extends Fragment
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Snackbar.make(mCropImageView, getString(R.string.toast_savedImage), Snackbar.LENGTH_INDEFINITE)
+                        .setAction("Action", null).show();
 
                 mCropImageView.getCroppedImageAsync();
                 Timer timer = new Timer();

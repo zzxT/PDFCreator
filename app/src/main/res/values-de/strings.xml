@@ -27,6 +27,8 @@
     <string name="add_text_delete">Seiten löschen</string>
     <string name="add_text_hint">Text Schreiben oder einfügen</string>
     <string name="add_text_hint2">Welche Seiten möchtest du behalten?</string>
+    <string name="add_text_PW">Benutzerpasswort eingeben:</string>
+    <string name="add_text_PW_hint">Wird gebraucht um die verschlüsselte Datei zu öffnen.</string>
 
     <string name="toast_yes">OK</string>
     <string name="toast_cancel">Abbrechen</string>
@@ -36,6 +38,8 @@
     <string name="toast_install_pdf">Bitte einen PDF Reader installieren.</string>
     <string name="toast_install_folder">Bitte einen Dateimanager installieren..</string>
     <string name="toast_noImage">Kein Bild vorhanden.</string>
+    <string name="toast_noPDF">Keine PDF Datei vorhanden.</string>
+    <string name="toast_noText">Bitte Text eingeben.</string>
     <string name="toast_savedImage">Bitte warten. Bild wird gespeichert.</string>
 
     <string name="goal_gallery">Aus der Galerie aussuchen</string>
@@ -56,6 +60,8 @@
 
     <string name="settings_prefApp">About the app</string>
     <string name="settings_prefDir">Anwendungsverzeichnis</string>
+    <string name="settings_prefEnc">Verschlüsselung</string>
+    <string name="settings_prefData">Metadaten</string>
 
     <string name="pref_license">Lizenz</string>
     <string name="pref_license_summary">Die App ist komplett frei (Open Source) und unter der GPL3-Lizenz lizenziert.</string>
@@ -77,6 +83,29 @@
         Der eingegebene Pfad muss mit einem \"/\" anfangen und enden, wie z.B. \"/Download/PDF/\". Noch nicht vorhandene Verzeichnisse
         werden automatisch erstellt.</string>
     <string name="pref_folder_hint" tools:ignore="TypographyEllipsis">/Download/PDF/...</string>
+
+    <string name="pref_pwUSER">Benutzerpasswort</string>
+    <string name="pref_pwUSER_summary">Setze das Benutzerpasswort um PDF-Dateien zu verschlüsseln.
+        Es wird später gebraucht um die verschlüsselte Datei zu öffnen. Nach der Entschlüsselung ist kopieren und drucken
+        erlaubt.</string>
+
+    <string name="pref_pwOWNER">Besitzerpasswort</string>
+    <string name="pref_pwOWNER_summary">Setze das Besitzerpasswort. Wenn jemand später die PDF-Datei bearbeiten will
+        braucht er dieses Passwort.</string>
+
+    <string name="pref_metaAuthor">Autor</string>
+    <string name="pref_metaAuthor_summary">Wer ist der Autor der PDF-Datei? Du kannst z.B. deinen Namen eingeben:
+        \"Max Mustermann\".</string>
+
+    <string name="pref_metaCreator">Ersteller</string>
+    <string name="pref_metaCreator_summary">Wer hat die PDF-Datei erstellt? Vielleicht diese App? \"PDF Creator using iText\"</string>
+
+    <string name="pref_metaKeywords">Schlüsselwörter</string>
+    <string name="pref_metaKeywords_summary">Benutze Schlüsselwörter für deine PDF-Dateien, Durch Komma getrennt:
+        \"Metadata, iText, PDF\"</string>
+
+    <string name="pref_metaSubject">Betreff</string>
+    <string name="pref_metaSubject_summary">Betreff deiner PDF-Datei: \"This example shows how to add metadata\".</string>
 
     <string-array name="listArrayImage">
         <item>Hoch (100%)</item>

@@ -68,13 +68,32 @@ public class add_text extends Fragment {
             @Override
             public void onClick(View view) {
 
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                title = sharedPref.getString("title", null);
+                String paragraph = edit.getText().toString().trim();
 
-                backup();
-                createPDF();
-                deleteTemp();
-                edit.setText("");
+                if (paragraph.isEmpty()) {
+                    Snackbar.make(edit, getString(R.string.toast_noText), Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                } else {
+                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    title = sharedPref.getString("title", null);
+                    folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+                    String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                            folder + title + ".pdf");
+
+                    File pdfFile = new File(path);
+
+                    if (pdfFile.exists()) {
+                        title = sharedPref.getString("title", null);
+
+                        backup();
+                        createPDF();
+                        deleteTemp();
+                        edit.setText("");
+                    } else {
+                        Snackbar.make(edit, getString(R.string.toast_noPDF), Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
+                }
             }
         });
 
@@ -143,6 +162,26 @@ public class add_text extends Fragment {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("application/pdf");
                 startActivityForResult(intent, 2);
+            }
+        });
+
+        ImageButton ib_4 = (ImageButton) rootView.findViewById(R.id.imageButton_4);
+        ib_4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                backup();
+                encryptPDF();
+                deleteTemp();
+            }
+        });
+
+        ImageButton ib_5 = (ImageButton) rootView.findViewById(R.id.imageButton_5);
+        ib_5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                backup();
+                addMeta();
+                deleteTemp();
             }
         });
 
@@ -275,6 +314,100 @@ public class add_text extends Fragment {
             PdfStamper pdfStamper = new PdfStamper(reader, new FileOutputStream(Environment.getExternalStorageDirectory() +  "/" + "123456.pdf"));
             pdfStamper.close();
             success();
+        }
+        catch (Exception e)
+        {
+            Snackbar.make(edit, getString(R.string.toast_successfully_not), Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }
+
+    }
+
+    private void encryptPDF() {
+        try {
+
+            // Load existing PDF
+            final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            title = sharedPref.getString("title", null);
+            folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+
+            String user = sharedPref.getString("pwUSER", "USER");
+            String owner = sharedPref.getString("pwOWNER", "OWNER");
+
+            String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                    folder + title + ".pdf");
+
+            PdfReader reader = new PdfReader(path);
+
+            PdfStamper pdfStamper = new PdfStamper(reader, new FileOutputStream(Environment.getExternalStorageDirectory() +  "/" + "123456.pdf"));
+            pdfStamper.setEncryption(user.getBytes(), owner.getBytes(),
+                    ~(PdfWriter.ALLOW_COPY | PdfWriter.ALLOW_PRINTING), PdfWriter.STANDARD_ENCRYPTION_128);
+            pdfStamper.close();
+            reader.close();
+            success();
+
+        }
+        catch (Exception e)
+        {
+            Snackbar.make(edit, getString(R.string.toast_successfully_not), Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }
+
+    }
+
+    private void addMeta() {
+        try {
+
+            try {
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                String metaAuthor = sharedPref.getString("metaAuthor", "");
+                String metaCreator = sharedPref.getString("metaCreator", "");
+                String metaSubject = sharedPref.getString("metaSubject", "");
+                String metaKeywords = sharedPref.getString("metaKeywords", "");
+
+                // Create output file if needed
+                File outputFile = new File(Environment.getExternalStorageDirectory() +  "/" + "123456.pdf");
+                if (!outputFile.exists()) outputFile.createNewFile();
+
+                Document document = new Document(PageSize.A4);
+                PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(outputFile));
+                document.open();
+                PdfContentByte cb = writer.getDirectContent();
+
+                // Load existing PDF
+
+                title = sharedPref.getString("title", null);
+                folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+                String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                        folder + title + ".pdf");
+                PdfReader reader = new PdfReader(path);
+
+                int n = reader.getNumberOfPages();
+
+                for (int i = 1; i <= n; i++) {
+                    document.newPage();
+                    //import the page from source pdf
+                    PdfImportedPage page = writer.getImportedPage(reader, i);
+                    //add the page to the destination pdf
+                    cb.addTemplate(page, 0, 0);
+                }
+
+                // Add your new data / text here
+                // for example...
+                document.addTitle(title);
+                document.addAuthor(metaAuthor);
+                document.addSubject(metaSubject);
+                document.addKeywords(metaKeywords);
+                document.addCreator(metaCreator);
+                document.close();
+                success();
+
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
         }
         catch (Exception e)
         {

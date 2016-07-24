@@ -136,8 +136,8 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         adapter.addFragment(new create_image(), String.valueOf(getString(R.string.create_image)));
-        adapter.addFragment(new add_image(), String.valueOf(getString(R.string.add_image)));
         adapter.addFragment(new create_text(), String.valueOf(getString(R.string.create_text)));
+        adapter.addFragment(new add_image(), String.valueOf(getString(R.string.add_image)));
         adapter.addFragment(new add_text(), String.valueOf(getString(R.string.add_text)));
 
         viewPager.setAdapter(adapter);

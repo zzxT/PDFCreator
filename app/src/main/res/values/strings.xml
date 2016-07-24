@@ -26,6 +26,8 @@
     <string name="add_text_delete">Delete pages</string>
     <string name="add_text_hint">Write or paste text</string>
     <string name="add_text_hint2">Which pages do you want to keep?</string>
+    <string name="add_text_PW">Please enter user password</string>
+    <string name="add_text_PW_hint">Needed to open the encrypted PDF file.</string>
 
     <string name="toast_yes">OK</string>
     <string name="toast_cancel">Cancel</string>
@@ -35,6 +37,8 @@
     <string name="toast_install_pdf">Please install a PDF reader.</string>
     <string name="toast_install_folder">Please install a file manager.</string>
     <string name="toast_noImage">No image to load.</string>
+    <string name="toast_noPDF">No PDF file to load.</string>
+    <string name="toast_noText">Please enter text.</string>
     <string name="toast_savedImage">Please wait. Saving image.</string>
 
     <string name="goal_gallery">Choose from gallery</string>
@@ -55,6 +59,8 @@
 
     <string name="settings_prefApp">About the app</string>
     <string name="settings_prefDir">App directory</string>
+    <string name="settings_prefEnc">Encryption</string>
+    <string name="settings_prefData">Document data</string>
 
     <string name="pref_license">License</string>
     <string name="pref_license_summary">The app is completely open source and licensed under GPL3.</string>
@@ -76,6 +82,27 @@
         The path zu desired folder must begin and end with \"/\" like \"/Download/PDF/\". If the desired directory does not exist,
         it will be generated automatically.</string>
     <string name="pref_folder_hint" tools:ignore="TypographyEllipsis">/Download/PDF/...</string>
+
+    <string name="pref_pwUSER">User password</string>
+    <string name="pref_pwUSER_summary">Set the user password for PDF files. It is used to open the PDF file after
+        encryption. Copy and printing is still allowed after decryption.</string>
+
+    <string name="pref_pwOWNER">Owner password</string>
+    <string name="pref_pwOWNER_summary">Set the owner password for encrypted PDF files. If somebody wants to edit the file
+        later he needs this password.</string>
+
+    <string name="pref_metaAuthor">Author</string>
+    <string name="pref_metaAuthor_summary">Who is the author of the PDF? You can enter for example your name:
+        \"Max Mustermann\".</string>
+
+    <string name="pref_metaCreator">Creator</string>
+    <string name="pref_metaCreator_summary">Who created the PDF? Perhaps this app? \"PDF Creator using iText\"</string>
+
+    <string name="pref_metaKeywords">Keywords</string>
+    <string name="pref_metaKeywords_summary">Set keywords for your PDFs, separated by commas: \"Metadata, iText, PDF\"</string>
+
+    <string name="pref_metaSubject">Subject</string>
+    <string name="pref_metaSubject_summary">Subject of your PDF file: \"This example shows how to add metadata\".</string>
 
     <string-array name="listArrayImage">
         <item>High (100%)</item>

@@ -38,6 +38,52 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:title="@string/settings_prefData">
+
+        <EditTextPreference
+            android:title="@string/pref_metaAuthor"
+            android:summary="@string/pref_metaAuthor_summary"
+            android:defaultValue=""
+            android:key="metaAuthor" />
+
+        <EditTextPreference
+            android:title="@string/pref_metaCreator"
+            android:summary="@string/pref_metaCreator_summary"
+            android:defaultValue="PDF Creator using iText"
+            android:key="metaCreator" />
+
+        <EditTextPreference
+            android:title="@string/pref_metaSubject"
+            android:summary="@string/pref_metaSubject_summary"
+            android:defaultValue=""
+            android:key="metaSubject" />
+
+        <EditTextPreference
+            android:title="@string/pref_metaKeywords"
+            android:summary="@string/pref_metaKeywords_summary"
+            android:defaultValue=""
+            android:key="metaKeywords" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/settings_prefEnc">
+
+        <EditTextPreference
+            android:title="@string/pref_pwOWNER"
+            android:summary="@string/pref_pwOWNER_summary"
+            android:defaultValue="OWNER"
+            android:key="pwOWNER" />
+
+        <EditTextPreference
+            android:title="@string/pref_pwUSER"
+            android:summary="@string/pref_pwUSER_summary"
+            android:defaultValue="USER"
+            android:key="pwUSER" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/settings_prefApp">
 
         <Preference
