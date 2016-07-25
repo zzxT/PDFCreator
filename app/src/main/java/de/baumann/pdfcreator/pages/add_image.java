@@ -39,8 +39,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import de.baumann.pdfcreator.ActivityEditor;
 import de.baumann.pdfcreator.R;
@@ -209,7 +207,28 @@ public class add_image extends Fragment {
             ib_6.setVisibility(View.GONE);
         }
 
+        // Get intent, action and MIME type
+        Intent intent = getActivity().getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if (type.startsWith("application/pdf")) {
+                handleSendPDF(intent); // Handle single image being sent
+            }
+        }
+
         return rootView;
+    }
+
+    private void handleSendPDF(Intent intent) {
+        Uri pdfUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+
+        String FilePath = pdfUri.getPath();
+        String FileTitle = FilePath.substring(FilePath.lastIndexOf("/")+1);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sharedPref.edit().putString("pathPDF", FilePath).apply();
+        sharedPref.edit().putString("title", FileTitle).apply();
     }
 
     private void createPDF() {

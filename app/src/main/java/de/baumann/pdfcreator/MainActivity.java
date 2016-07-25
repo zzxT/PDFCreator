@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -193,17 +194,37 @@ public class MainActivity extends AppCompatActivity {
             folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
             String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
                     folder + title + ".pdf");
-            String FileTitle = path.substring(path.lastIndexOf("/")+1);
-            String text = getString(R.string.action_share_Text);
 
-            Uri myUri= Uri.fromFile(new File(path));
-            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-            sharingIntent.setType("application/pdf");
-            sharingIntent.putExtra(Intent.EXTRA_STREAM, myUri);
-            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, FileTitle);
-            sharingIntent.putExtra(Intent.EXTRA_TEXT, text + " " + FileTitle);
-            sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            startActivity(Intent.createChooser(sharingIntent, getString(R.string.action_share_with)));
+            File pdfFile = new File(path);
+
+            if (pdfFile.exists()) {
+
+                String FileTitle = path.substring(path.lastIndexOf("/")+1);
+                String text = getString(R.string.action_share_Text);
+
+                Uri myUri= Uri.fromFile(new File(path));
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("application/pdf");
+                sharingIntent.putExtra(Intent.EXTRA_STREAM, myUri);
+                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, FileTitle);
+                sharingIntent.putExtra(Intent.EXTRA_TEXT, text + " " + FileTitle);
+                sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivity(Intent.createChooser(sharingIntent, getString(R.string.action_share_with)));
+            } else {
+                LayoutInflater inflater = getLayoutInflater();
+
+                View toastLayout = inflater.inflate(R.layout.toast,
+                        (ViewGroup) findViewById(R.id.toast_root_view));
+
+                TextView header = (TextView) toastLayout.findViewById(R.id.toast_message);
+                header.setText(R.string.toast_noPDF);
+
+                Toast toast = new Toast(getApplicationContext());
+                toast.setGravity(Gravity.FILL_HORIZONTAL | Gravity.BOTTOM, 0, 0);
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(toastLayout);
+                toast.show();
+            }
         }
 
         if (id == R.id.action_open) {
@@ -214,22 +235,41 @@ public class MainActivity extends AppCompatActivity {
             String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
                     folder + title + ".pdf");
 
-            File file = new File(path);
-            Intent target = new Intent(Intent.ACTION_VIEW);
-            target.setDataAndType(Uri.fromFile(file),"application/pdf");
-            target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            File pdfFile = new File(path);
 
-            try {
-                startActivity(target);
-            } catch (ActivityNotFoundException e) {
-                // Instruct the user to install a PDF reader here, or something
+            if (pdfFile.exists()) {
+
+                File file = new File(path);
+                Intent target = new Intent(Intent.ACTION_VIEW);
+                target.setDataAndType(Uri.fromFile(file),"application/pdf");
+                target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+                try {
+                    startActivity(target);
+                } catch (ActivityNotFoundException e) {
+                    // Instruct the user to install a PDF reader here, or something
+                    LayoutInflater inflater = getLayoutInflater();
+
+                    View toastLayout = inflater.inflate(R.layout.toast,
+                            (ViewGroup) findViewById(R.id.toast_root_view));
+
+                    TextView header = (TextView) toastLayout.findViewById(R.id.toast_message);
+                    header.setText(R.string.toast_install_pdf);
+
+                    Toast toast = new Toast(getApplicationContext());
+                    toast.setGravity(Gravity.FILL_HORIZONTAL | Gravity.BOTTOM, 0, 0);
+                    toast.setDuration(Toast.LENGTH_LONG);
+                    toast.setView(toastLayout);
+                    toast.show();
+                }
+            } else {
                 LayoutInflater inflater = getLayoutInflater();
 
                 View toastLayout = inflater.inflate(R.layout.toast,
                         (ViewGroup) findViewById(R.id.toast_root_view));
 
                 TextView header = (TextView) toastLayout.findViewById(R.id.toast_message);
-                header.setText(R.string.toast_install_pdf);
+                header.setText(R.string.toast_noPDF);
 
                 Toast toast = new Toast(getApplicationContext());
                 toast.setGravity(Gravity.FILL_HORIZONTAL | Gravity.BOTTOM, 0, 0);
@@ -237,7 +277,6 @@ public class MainActivity extends AppCompatActivity {
                 toast.setView(toastLayout);
                 toast.show();
             }
-
         }
 
         if (id == R.id.action_folder) {

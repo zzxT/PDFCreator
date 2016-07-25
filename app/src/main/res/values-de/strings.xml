@@ -1,16 +1,40 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    // App
+
     <string name="app_name">PDF Creator</string>
-    <string name="app_title">Bitte Titel eingeben:</string>
-    <string name="app_title_date">Datum</string>
+    <string name="app_permissions">You must grant \"Access Storage Permission\" to save pdf files. After that you should
+        completely close the app or restart the phone. If you don\'t permit the storage access but want to use the
+        screenshot function at a later time, you can grant the permission later. Please open then: system settings - apps -
+        weather. In the permissions section you can grant the \"write storage permission\".</string>
+
+
+    // App titles
+
+    <string name="create_image">Bild zu PDF</string>
+    <string name="create_text">Text zu PDF</string>
+    <string name="add_image">+ Bild</string>
+    <string name="add_text">+ Text | …</string>
     <string name="app_title_edit">Bild bearbeiten</string>
-    <string name="app_title_crop" tools:keep="@string/app_title_crop">Bild zuschneiden</string>
-    <string name="app_hint" tools:ignore="TypographyEllipsis">Was immer du willst ...</string>
-    <string name="app_permissions">Du musst der App Zugriff auf den Gerätespeicher gewähren, damit PDF-Dateien
-        gespeichert werden können. Danach solltest du die Anwendung komplett schließen oder das Telefon neu starten.
-        Wenn du den Zugriff verweigerst und die Funktion später doch nutzen willst, kannst du die Berechtigung
-        nachträglich erteilen. Öffne dafür: Systemeinstellungen - Apps - Wetter. Im Bereich Berechtigungen kannst
-        dann die entsprechende Einstellung vornehmen.</string>
+    <string name="app_title_crop">Bild zuschneiden</string>
+
+
+    // Snackbar // Toasts
+
+    <string name="toast_yes">OK</string>
+    <string name="toast_cancel">Abbrechen</string>
+    <string name="toast_successfully">PDF erfolgreich erstellt.</string>
+    <string name="toast_successfully_not">Beim erstellen der PDF-Datei ist ein Fehler passiert.</string>
+    <string name="toast_open">Öffnen?</string>
+    <string name="toast_install_pdf">Bitte einen PDF Reader installieren.</string>
+    <string name="toast_install_folder">Bitte einen Dateimanager installieren..</string>
+    <string name="toast_noImage">Bitte ein Bild auswählen.</string>
+    <string name="toast_noPDF">Bitte eine PDF-Datei auswählen.</string>
+    <string name="toast_noText">Bitte Text eingeben.</string>
+    <string name="toast_savedImage">Bitte warten. Bild wird gespeichert.</string>
+
+
+    // Main menu
 
     <string name="action_share">PDF teilen</string>
     <string name="action_open">PDF öffnen</string>
@@ -20,31 +44,32 @@
     <string name="action_share_with">PDF teilen mit:</string>
     <string name="action_share_Text">Folgende Datei ist dem Anhang beigefügt:</string>
 
-    <string name="create_image">Bild zu PDF</string>
-    <string name="create_text">Text zu PDF</string>
-    <string name="add_image">+ Bild</string>
-    <string name="add_text" tools:ignore="TypographyEllipsis">+ Text | ...</string>
-    <string name="add_text_delete">Seiten löschen</string>
-    <string name="add_text_hint">Text Schreiben oder einfügen</string>
-    <string name="add_text_hint2">Welche Seiten möchtest du behalten?</string>
-    <string name="add_text_PW">Benutzerpasswort eingeben:</string>
-    <string name="add_text_PW_hint">Wird gebraucht um die verschlüsselte Datei zu öffnen.</string>
 
-    <string name="toast_yes">OK</string>
-    <string name="toast_cancel">Abbrechen</string>
-    <string name="toast_successfully">PDF erfolgreich erstellt.</string>
-    <string name="toast_successfully_not">Beim erstellen der PDF-Datei ist ein Fehler passiert.</string>
-    <string name="toast_open">Öffnen?</string>
-    <string name="toast_install_pdf">Bitte einen PDF Reader installieren.</string>
-    <string name="toast_install_folder">Bitte einen Dateimanager installieren..</string>
-    <string name="toast_noImage">Kein Bild vorhanden.</string>
-    <string name="toast_noPDF">Keine PDF Datei vorhanden.</string>
-    <string name="toast_noText">Bitte Text eingeben.</string>
-    <string name="toast_savedImage">Bitte warten. Bild wird gespeichert.</string>
+    // Fragments
+
+    <string name="app_title">Bitte Titel eingeben:</string>
+    <string name="app_title_date">Datum</string>
+    <string name="app_hint">Was immer du willst …</string>
+
+
+    // Text fragment
+
+    <string name="add_text_delete">Seiten löschen</string>
+    <string name="add_text_delete_hint">Welche Seiten möchtest du behalten?</string>
+    <string name="add_text_hint_enterText">Schreiben oder Text einfügen</string>
+    <string name="add_text_PW">Neues Benutzerpasswort</string>
+    <string name="add_text_PW_hint">Wird gebraucht um die verschlüsselte PDF-Datei zu öffnen.</string>
+
+
+    // Image fragment
+
 
     <string name="goal_gallery">Aus der Galerie aussuchen</string>
     <string name="goal_camera">Foto aufnehmen</string>
     <string name="goal_cancel">Abbrechen</string>
+
+
+    // Editor
 
     <string name="filter_1">Kontrast</string>
     <string name="filter_2">Farbwert</string>
@@ -57,6 +82,9 @@
     <string name="filter_8">Weißabgleich</string>
     <string name="filter_9">Farbkorrektur</string>
     <string name="filter_10">Mitten ausgleichen</string>
+
+
+    // Settings
 
     <string name="settings_prefApp">About the app</string>
     <string name="settings_prefDir">Anwendungsverzeichnis</string>
@@ -79,15 +107,15 @@
     <string name="pref_folderDef_summary">Benutze das Standardverzeichnis: \"/Android/data/de.baumann.pdf/\".</string>
 
     <string name="pref_folder">Eigenes Verzeichnis</string>
-    <string name="pref_folder_summary">Ändere das Verzeichnis in dem neue PDF-Dateien und Sicherungen gespeichert werden.
-        Der eingegebene Pfad muss mit einem \"/\" anfangen und enden, wie z.B. \"/Download/PDF/\". Noch nicht vorhandene Verzeichnisse
-        werden automatisch erstellt.</string>
+    <string name="pref_folder_summary">Ändere das Verzeichnis in dem neue PDF-Dateien und Sicherungen gespeichert werden. Gib den Pfad
+        zum gewünschten Verzeichnis auf deiner SD-Karte ein. Der eingegebene Pfad muss mit einem \"/\" anfangen und enden, wie
+        z.B. \"/Download/PDF/\". Noch nicht vorhandene Verzeichnisse werden automatisch erstellt.</string>
     <string name="pref_folder_hint" tools:ignore="TypographyEllipsis">/Download/PDF/...</string>
 
     <string name="pref_pwUSER">Benutzerpasswort</string>
     <string name="pref_pwUSER_summary">Setze das Benutzerpasswort um PDF-Dateien zu verschlüsseln.
         Es wird später gebraucht um die verschlüsselte Datei zu öffnen. Nach der Entschlüsselung ist kopieren und drucken
-        erlaubt.</string>
+        erlaubt. Es kann im \"+text | …\"-Tab durch langes Drücken des Verschlüsselungsicons geändert werden.</string>
 
     <string name="pref_pwOWNER">Besitzerpasswort</string>
     <string name="pref_pwOWNER_summary">Setze das Besitzerpasswort. Wenn jemand später die PDF-Datei bearbeiten will
@@ -95,17 +123,19 @@
 
     <string name="pref_metaAuthor">Autor</string>
     <string name="pref_metaAuthor_summary">Wer ist der Autor der PDF-Datei? Du kannst z.B. deinen Namen eingeben:
-        \"Max Mustermann\".</string>
+        \"Max Mustermann\". Kann durch langes Drücken des Tagicons im \"+text | …\"-Tab geändert werden.</string>
 
     <string name="pref_metaCreator">Ersteller</string>
-    <string name="pref_metaCreator_summary">Wer hat die PDF-Datei erstellt? Vielleicht diese App? \"PDF Creator using iText\"</string>
+    <string name="pref_metaCreator_summary">Wer hat die PDF-Datei erstellt? Vielleicht diese App: \"PDF Creator using iText\".
+        Kann durch langes Drücken des Tagicons im \"+text | …\"-Tab geändert werden.</string>
 
     <string name="pref_metaKeywords">Schlüsselwörter</string>
-    <string name="pref_metaKeywords_summary">Benutze Schlüsselwörter für deine PDF-Dateien, Durch Komma getrennt:
-        \"Metadata, iText, PDF\"</string>
+    <string name="pref_metaKeywords_summary">Benutze Schlüsselwörter für deine PDF-Dateien, durch Komma getrennt:
+        \"Metadata, iText, PDF\". Kann durch langes Drücken des Tagicons im \"+text | …\"-Tab geändert werden.</string>
 
     <string name="pref_metaSubject">Betreff</string>
-    <string name="pref_metaSubject_summary">Betreff deiner PDF-Datei: \"This example shows how to add metadata\".</string>
+    <string name="pref_metaSubject_summary">Betreff deiner PDF-Datei: \"This example shows how to add metadata\".
+        Kann durch langes Drücken des Tagicons im \"+text | …\"-Tab geändert werden.</string>
 
     <string-array name="listArrayImage">
         <item>Hoch (100%)</item>
@@ -119,11 +149,11 @@
         <item>60</item>
     </string-array>
 
+
     //Image cropper
 
-    <string name="app_title_1">Bild zuschneiden</string>
-    <string name="app_title_2" tools:ignore="TypographyEllipsis">Speichere Bild ...</string>
-
+    <string name="app_title_2">Speichere Bild …</string>
     <string name="crop_image_menu_rotate_left">Nach links drehen</string>
+    <string name="crop_image_menu_rotate_right">Nch rechts drehen</string>
 
 </resources>

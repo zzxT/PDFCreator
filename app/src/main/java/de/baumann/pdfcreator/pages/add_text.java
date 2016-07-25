@@ -19,10 +19,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -40,11 +40,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import de.baumann.pdfcreator.R;
 
@@ -130,7 +127,7 @@ public class add_text extends Fragment {
                 final AlertDialog d = new AlertDialog.Builder(getActivity())
                         .setView(layout)
                         .setTitle(R.string.add_text_delete)
-                        .setMessage(R.string.add_text_hint2)
+                        .setMessage(R.string.add_text_delete_hint)
                         .setCancelable(true)
                         .setPositiveButton(R.string.toast_yes, new DialogInterface.OnClickListener() {
 
@@ -175,6 +172,45 @@ public class add_text extends Fragment {
             }
         });
 
+        ib_4.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                LinearLayout layout = new LinearLayout(getActivity());
+                layout.setOrientation(LinearLayout.VERTICAL);
+                layout.setGravity(Gravity.CENTER_HORIZONTAL);
+                final EditText input = new EditText(getActivity());
+                input.setSingleLine(true);
+                layout.setPadding(25, 0, 50, 0);
+                layout.addView(input);
+
+                final AlertDialog d = new AlertDialog.Builder(getActivity())
+                        .setView(layout)
+                        .setTitle(R.string.add_text_PW)
+                        .setMessage(R.string.add_text_PW_hint)
+                        .setCancelable(true)
+                        .setPositiveButton(R.string.toast_yes, new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                String pw = input.getText().toString().trim();
+                                sharedPref.edit()
+                                        .putString("pwUSER", pw)
+                                        .apply();
+                            }
+                        })
+                        .setNegativeButton(R.string.toast_cancel, new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                dialog.cancel();
+                            }
+                        })
+                        .create();
+
+                d.show();
+                return false;
+            }
+        });
+
         ImageButton ib_5 = (ImageButton) rootView.findViewById(R.id.imageButton_5);
         ib_5.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,6 +221,88 @@ public class add_text extends Fragment {
             }
         });
 
+        ib_5.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+                String metaAuthor = sharedPref.getString("metaAuthor", "");
+                String metaCreator = sharedPref.getString("metaCreator", "");
+                String metaSubject = sharedPref.getString("metaSubject", "");
+                String metaKeywords = sharedPref.getString("metaKeywords", "");
+
+                LinearLayout layout = new LinearLayout(getActivity());
+                layout.setOrientation(LinearLayout.VERTICAL);
+                layout.setGravity(Gravity.CENTER_HORIZONTAL);
+                layout.setPadding(50, 0, 50, 0);
+
+                final TextView author = new TextView(getContext());
+                author.setText(R.string.pref_metaAuthor);
+                author.setPadding(5,50,0,0);
+                layout.addView(author);
+
+                final EditText authorEdit = new EditText(getContext());
+                authorEdit.setText(metaAuthor);
+                layout.addView(authorEdit);
+
+                final TextView creator = new TextView(getContext());
+                creator.setText(R.string.pref_metaCreator);
+                creator.setPadding(5,25,0,0);
+                layout.addView(creator);
+
+                final EditText creatorEdit = new EditText(getContext());
+                creatorEdit.setText(metaCreator);
+                layout.addView(creatorEdit);
+
+                final TextView subject = new TextView(getContext());
+                subject.setText(R.string.pref_metaSubject);
+                subject.setPadding(5,25,0,0);
+                layout.addView(subject);
+
+                final EditText subjectEdit = new EditText(getContext());
+                subjectEdit.setText(metaSubject);
+                layout.addView(subjectEdit);
+
+                final TextView keywords = new TextView(getContext());
+                keywords.setText(R.string.pref_metaKeywords);
+                keywords.setPadding(5,25,0,0);
+                layout.addView(keywords);
+
+                final EditText keywordsEdit = new EditText(getContext());
+                keywordsEdit.setText(metaKeywords);
+                layout.addView(keywordsEdit);
+
+                final AlertDialog d = new AlertDialog.Builder(getActivity())
+                        .setView(layout)
+                        .setCancelable(true)
+                        .setPositiveButton(R.string.toast_yes, new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                String au = authorEdit.getText().toString().trim();
+                                String cr = creatorEdit.getText().toString().trim();
+                                String su = subjectEdit.getText().toString().trim();
+                                String kw = keywordsEdit.getText().toString().trim();
+                                sharedPref.edit()
+                                        .putString("metaAuthor", au)
+                                        .putString("metaCreator", cr)
+                                        .putString("metaSubject", su)
+                                        .putString("metaKeywords", kw)
+                                        .apply();
+                            }
+                        })
+                        .setNegativeButton(R.string.toast_cancel, new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                dialog.cancel();
+                            }
+                        })
+                        .create();
+
+                d.show();
+                return false;
+            }
+        });
+
         Intent intent = getActivity().getIntent();
         String action = intent.getAction();
         String type = intent.getType();
@@ -192,6 +310,8 @@ public class add_text extends Fragment {
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if (type.startsWith("text/")) {
                 handleSendText(intent); // Handle single image being sent
+            } else if (type.startsWith("application/pdf")) {
+                handleSendPDF(intent); // Handle single image being sent
             }
         }
 
@@ -204,6 +324,16 @@ public class add_text extends Fragment {
             // Update UI to reflect text being shared
             edit.setText(sharedText);
         }
+    }
+
+    private void handleSendPDF(Intent intent) {
+        Uri pdfUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+
+        String FilePath = pdfUri.getPath();
+        String FileTitle = FilePath.substring(FilePath.lastIndexOf("/")+1);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sharedPref.edit().putString("pathPDF", FilePath).apply();
+        sharedPref.edit().putString("title", FileTitle).apply();
     }
 
     @Override

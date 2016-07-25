@@ -51,7 +51,7 @@ public class CropImageActivity extends AppCompatActivity implements CropImageVie
         if (actionBar != null) {
             String title = mOptions.activityTitle != null && !mOptions.activityTitle.isEmpty()
                     ? mOptions.activityTitle
-                    : getResources().getString(R.string.app_title_1);
+                    : getResources().getString(R.string.app_title_crop);
             actionBar.setTitle(title);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }

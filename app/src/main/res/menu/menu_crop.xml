@@ -3,7 +3,7 @@
     <item
         android:id="@+id/crop_image_menu_rotate_right"
         android:icon="@drawable/rotate_right"
-        android:title="@string/crop_image_menu_rotate_left"
+        android:title="@string/crop_image_menu_rotate_right"
         app:showAsAction="ifRoom"/>
 
     <item

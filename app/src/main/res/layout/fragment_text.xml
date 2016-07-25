@@ -21,7 +21,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/editText"
-        android:hint="@string/add_text_hint"
+        android:hint="@string/add_text_hint_enterText"
         android:layout_alignParentStart="false"
         android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
         android:layout_above="@+id/fab"

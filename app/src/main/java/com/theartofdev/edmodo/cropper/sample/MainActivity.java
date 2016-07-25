@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         if (actionBar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
-            setTitle(R.string.app_title_1);
+            setTitle(R.string.app_title_crop);
         }
 
         if (savedInstanceState == null) {
