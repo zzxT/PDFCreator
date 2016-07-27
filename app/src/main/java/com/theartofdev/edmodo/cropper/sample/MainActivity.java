@@ -25,19 +25,10 @@ import de.baumann.pdfcreator.R;
 
 public class MainActivity extends AppCompatActivity {
 
-    //region: Fields and Consts
-
-
-
     private MainFragment mCurrentFragment;
-
-
-    //endregion
-
     public void setCurrentFragment(MainFragment fragment) {
         mCurrentFragment = fragment;
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
         return mCurrentFragment != null && mCurrentFragment.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
-
 
     private void setMainFragmentByPreset() {
         FragmentManager fragmentManager = getSupportFragmentManager();

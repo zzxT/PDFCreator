@@ -12,7 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -72,10 +71,14 @@ public class MainActivity extends AppCompatActivity {
                     sharedPref.edit()
                             .putInt("startFragment", 0)
                             .apply(); // Handle single image being sent
-                } else if (type.startsWith("text/")) {
+                } if (type.startsWith("text/")) {
                     sharedPref.edit()
                             .putInt("startFragment", 1)
-                            .apply(); // Handle single image being sent
+                            .apply(); // Handle text being sent
+                } else if (type.startsWith("application/pdf")) {
+                    sharedPref.edit()
+                            .putInt("startFragment", 3)
+                            .apply(); // Handle PDF being sent
                 }
             }
         }

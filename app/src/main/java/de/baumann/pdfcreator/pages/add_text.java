@@ -6,6 +6,8 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,7 +22,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,6 +35,10 @@ import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import org.vudroid.core.DecodeServiceBase;
+import org.vudroid.core.codec.CodecPage;
+import org.vudroid.pdfdroid.codec.PdfContext;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -42,6 +47,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import de.baumann.pdfcreator.R;
 
@@ -49,7 +55,8 @@ import de.baumann.pdfcreator.R;
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class add_text extends Fragment {
 
-    private static EditText edit;
+    private EditText edit;
+    private TextView textTitle;
     private String title;
     private String folder;
     private String pages;
@@ -95,211 +102,332 @@ public class add_text extends Fragment {
         });
 
         edit = (EditText) rootView.findViewById(R.id.editText);
-
-        ImageButton ib_1 = (ImageButton) rootView.findViewById(R.id.imageButton_1);
-        ib_1.setOnClickListener(new View.OnClickListener() {
+        textTitle = (TextView) rootView.findViewById(R.id.textTitle);
+        textTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                if (sharedPref.getBoolean ("rotate", false)) {
+                    sharedPref.edit()
+                            .putBoolean("rotate", false)
+                            .apply();
+                } else {
+                    sharedPref.edit()
+                            .putBoolean("rotate", true)
+                            .apply();
+                }
+                setTextField();
+            }
+        });
+        setTextField();
+
+        FloatingActionButton fab_1 = (FloatingActionButton) rootView.findViewById(R.id.fab_1);
+        fab_1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                title = sharedPref.getString("title", null);
+                folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+                String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                        folder + title + ".pdf");
+
+                File pdfFile = new File(path);
+
+                if (pdfFile.exists()) {
+                    backup();
+                    pages = sharedPref.getString("deletePages", null);
+
+                    LinearLayout layout = new LinearLayout(getActivity());
+                    layout.setOrientation(LinearLayout.VERTICAL);
+                    layout.setGravity(Gravity.CENTER_HORIZONTAL);
+                    final EditText input = new EditText(getActivity());
+                    input.setSingleLine(true);
+                    layout.setPadding(25, 0, 50, 0);
+                    input.setHint("1-5,7,15-20");
+                    input.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                    layout.addView(input);
+
+                    final AlertDialog d = new AlertDialog.Builder(getActivity())
+                            .setView(layout)
+                            .setTitle(R.string.add_text_delete)
+                            .setMessage(R.string.add_text_delete_hint)
+                            .setCancelable(true)
+                            .setPositiveButton(R.string.toast_yes, new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    pages = input.getText().toString().trim();
+                                    sharedPref.edit()
+                                            .putString("deletePages", pages)
+                                            .apply();
+                                    deletePage();
+                                    deleteTemp();
+                                }
+                            })
+                            .setNegativeButton(R.string.toast_cancel, new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    dialog.cancel();
+                                }
+                            })
+                            .create();
+
+                    d.show();
+                } else {
+                    Snackbar.make(edit, getString(R.string.toast_noPDF), Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            }
+        });
+
+        FloatingActionButton fab_2 = (FloatingActionButton) rootView.findViewById(R.id.fab_2);
+        fab_2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                title = sharedPref.getString("title", null);
+                folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+                String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                        folder + title + ".pdf");
+
+                File pdfFile = new File(path);
+
+                if (pdfFile.exists()) {
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.setType("application/pdf");
+                    startActivityForResult(intent, 2);
+                } else {
+                    Snackbar.make(edit, getString(R.string.toast_noPDF), Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            }
+        });
+
+        FloatingActionButton fab_3 = (FloatingActionButton) rootView.findViewById(R.id.fab_3);
+        fab_3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                title = sharedPref.getString("title", null);
+                folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+                String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                        folder + title + ".pdf");
+
+                File pdfFile = new File(path);
+
+                if (pdfFile.exists()) {
+                    backup();
+                    encryptPDF();
+                    deleteTemp();
+                } else {
+                    Snackbar.make(edit, getString(R.string.toast_noPDF), Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            }
+        });
+
+        fab_3.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                title = sharedPref.getString("title", null);
+                folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+                String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                        folder + title + ".pdf");
+
+                File pdfFile = new File(path);
+
+                if (pdfFile.exists()) {
+                    LinearLayout layout = new LinearLayout(getActivity());
+                    layout.setOrientation(LinearLayout.VERTICAL);
+                    layout.setGravity(Gravity.CENTER_HORIZONTAL);
+                    final EditText input = new EditText(getActivity());
+                    input.setSingleLine(true);
+                    layout.setPadding(25, 0, 50, 0);
+                    layout.addView(input);
+
+                    final AlertDialog d = new AlertDialog.Builder(getActivity())
+                            .setView(layout)
+                            .setTitle(R.string.add_text_PW)
+                            .setMessage(R.string.add_text_PW_hint)
+                            .setCancelable(true)
+                            .setPositiveButton(R.string.toast_yes, new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    String pw = input.getText().toString().trim();
+                                    sharedPref.edit()
+                                            .putString("pwUSER", pw)
+                                            .apply();
+                                }
+                            })
+                            .setNegativeButton(R.string.toast_cancel, new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    dialog.cancel();
+                                }
+                            })
+                            .create();
+
+                    d.show();
+                } else {
+                    Snackbar.make(edit, getString(R.string.toast_noPDF), Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+                return false;
+            }
+        });
+
+        FloatingActionButton fab_4 = (FloatingActionButton) rootView.findViewById(R.id.fab_4);
+        fab_4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                title = sharedPref.getString("title", null);
+                folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+                String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                        folder + title + ".pdf");
+
+                File pdfFile = new File(path);
+
+                if (pdfFile.exists()) {
+                    backup();
+                    addMeta();
+                    deleteTemp();
+                } else {
+                    Snackbar.make(edit, getString(R.string.toast_noPDF), Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            }
+        });
+
+        fab_4.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                title = sharedPref.getString("title", null);
+                folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+                String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                        folder + title + ".pdf");
+
+                File pdfFile = new File(path);
+
+                if (pdfFile.exists()) {
+
+                    String metaAuthor = sharedPref.getString("metaAuthor", "");
+                    String metaCreator = sharedPref.getString("metaCreator", "");
+                    String metaSubject = sharedPref.getString("metaSubject", "");
+                    String metaKeywords = sharedPref.getString("metaKeywords", "");
+
+                    LinearLayout layout = new LinearLayout(getActivity());
+                    layout.setOrientation(LinearLayout.VERTICAL);
+                    layout.setGravity(Gravity.CENTER_HORIZONTAL);
+                    layout.setPadding(50, 0, 50, 0);
+
+                    final TextView author = new TextView(getContext());
+                    author.setText(R.string.pref_metaAuthor);
+                    author.setPadding(5,50,0,0);
+                    layout.addView(author);
+
+                    final EditText authorEdit = new EditText(getContext());
+                    authorEdit.setText(metaAuthor);
+                    layout.addView(authorEdit);
+
+                    final TextView creator = new TextView(getContext());
+                    creator.setText(R.string.pref_metaCreator);
+                    creator.setPadding(5,25,0,0);
+                    layout.addView(creator);
+
+                    final EditText creatorEdit = new EditText(getContext());
+                    creatorEdit.setText(metaCreator);
+                    layout.addView(creatorEdit);
+
+                    final TextView subject = new TextView(getContext());
+                    subject.setText(R.string.pref_metaSubject);
+                    subject.setPadding(5,25,0,0);
+                    layout.addView(subject);
+
+                    final EditText subjectEdit = new EditText(getContext());
+                    subjectEdit.setText(metaSubject);
+                    layout.addView(subjectEdit);
+
+                    final TextView keywords = new TextView(getContext());
+                    keywords.setText(R.string.pref_metaKeywords);
+                    keywords.setPadding(5,25,0,0);
+                    layout.addView(keywords);
+
+                    final EditText keywordsEdit = new EditText(getContext());
+                    keywordsEdit.setText(metaKeywords);
+                    layout.addView(keywordsEdit);
+
+                    final AlertDialog d = new AlertDialog.Builder(getActivity())
+                            .setView(layout)
+                            .setCancelable(true)
+                            .setPositiveButton(R.string.toast_yes, new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    String au = authorEdit.getText().toString().trim();
+                                    String cr = creatorEdit.getText().toString().trim();
+                                    String su = subjectEdit.getText().toString().trim();
+                                    String kw = keywordsEdit.getText().toString().trim();
+                                    sharedPref.edit()
+                                            .putString("metaAuthor", au)
+                                            .putString("metaCreator", cr)
+                                            .putString("metaSubject", su)
+                                            .putString("metaKeywords", kw)
+                                            .apply();
+                                }
+                            })
+                            .setNegativeButton(R.string.toast_cancel, new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    dialog.cancel();
+                                }
+                            })
+                            .create();
+
+                    d.show();
+                } else {
+                    Snackbar.make(edit, getString(R.string.toast_noPDF), Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+                return false;
+            }
+        });
+
+        FloatingActionButton fab_5 = (FloatingActionButton) rootView.findViewById(R.id.fab_5);
+        fab_5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                title = sharedPref.getString("title", null);
+                folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+                String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                        folder + title + ".pdf");
+
+                File pdfFile = new File(path);
+
+                if (pdfFile.exists()) {
+                    backup();
+                    pdtToImg();
+                } else {
+                    Snackbar.make(edit, getString(R.string.toast_noPDF), Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            }
+        });
+
+        FloatingActionButton fab_6 = (FloatingActionButton) rootView.findViewById(R.id.fab_6);
+        fab_6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("application/pdf");
                 startActivityForResult(intent, 1);
-            }
-        });
-
-        ImageButton ib_2 = (ImageButton) rootView.findViewById(R.id.imageButton_2);
-        ib_2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                backup();
-                final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                pages = sharedPref.getString("deletePages", null);
-
-                LinearLayout layout = new LinearLayout(getActivity());
-                layout.setOrientation(LinearLayout.VERTICAL);
-                layout.setGravity(Gravity.CENTER_HORIZONTAL);
-                final EditText input = new EditText(getActivity());
-                input.setSingleLine(true);
-                layout.setPadding(25, 0, 50, 0);
-                input.setHint("1-5,7,15-20");
-                input.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                layout.addView(input);
-
-                final AlertDialog d = new AlertDialog.Builder(getActivity())
-                        .setView(layout)
-                        .setTitle(R.string.add_text_delete)
-                        .setMessage(R.string.add_text_delete_hint)
-                        .setCancelable(true)
-                        .setPositiveButton(R.string.toast_yes, new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                pages = input.getText().toString().trim();
-                                sharedPref.edit()
-                                        .putString("deletePages", pages)
-                                        .apply();
-                                deletePage();
-                                deleteTemp();
-                            }
-                        })
-                        .setNegativeButton(R.string.toast_cancel, new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                dialog.cancel();
-                            }
-                        })
-                        .create();
-
-                d.show();
-            }
-        });
-
-        ImageButton ib_3 = (ImageButton) rootView.findViewById(R.id.imageButton_3);
-        ib_3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("application/pdf");
-                startActivityForResult(intent, 2);
-            }
-        });
-
-        ImageButton ib_4 = (ImageButton) rootView.findViewById(R.id.imageButton_4);
-        ib_4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                backup();
-                encryptPDF();
-                deleteTemp();
-            }
-        });
-
-        ib_4.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                LinearLayout layout = new LinearLayout(getActivity());
-                layout.setOrientation(LinearLayout.VERTICAL);
-                layout.setGravity(Gravity.CENTER_HORIZONTAL);
-                final EditText input = new EditText(getActivity());
-                input.setSingleLine(true);
-                layout.setPadding(25, 0, 50, 0);
-                layout.addView(input);
-
-                final AlertDialog d = new AlertDialog.Builder(getActivity())
-                        .setView(layout)
-                        .setTitle(R.string.add_text_PW)
-                        .setMessage(R.string.add_text_PW_hint)
-                        .setCancelable(true)
-                        .setPositiveButton(R.string.toast_yes, new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                String pw = input.getText().toString().trim();
-                                sharedPref.edit()
-                                        .putString("pwUSER", pw)
-                                        .apply();
-                            }
-                        })
-                        .setNegativeButton(R.string.toast_cancel, new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                dialog.cancel();
-                            }
-                        })
-                        .create();
-
-                d.show();
-                return false;
-            }
-        });
-
-        ImageButton ib_5 = (ImageButton) rootView.findViewById(R.id.imageButton_5);
-        ib_5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                backup();
-                addMeta();
-                deleteTemp();
-            }
-        });
-
-        ib_5.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-                String metaAuthor = sharedPref.getString("metaAuthor", "");
-                String metaCreator = sharedPref.getString("metaCreator", "");
-                String metaSubject = sharedPref.getString("metaSubject", "");
-                String metaKeywords = sharedPref.getString("metaKeywords", "");
-
-                LinearLayout layout = new LinearLayout(getActivity());
-                layout.setOrientation(LinearLayout.VERTICAL);
-                layout.setGravity(Gravity.CENTER_HORIZONTAL);
-                layout.setPadding(50, 0, 50, 0);
-
-                final TextView author = new TextView(getContext());
-                author.setText(R.string.pref_metaAuthor);
-                author.setPadding(5,50,0,0);
-                layout.addView(author);
-
-                final EditText authorEdit = new EditText(getContext());
-                authorEdit.setText(metaAuthor);
-                layout.addView(authorEdit);
-
-                final TextView creator = new TextView(getContext());
-                creator.setText(R.string.pref_metaCreator);
-                creator.setPadding(5,25,0,0);
-                layout.addView(creator);
-
-                final EditText creatorEdit = new EditText(getContext());
-                creatorEdit.setText(metaCreator);
-                layout.addView(creatorEdit);
-
-                final TextView subject = new TextView(getContext());
-                subject.setText(R.string.pref_metaSubject);
-                subject.setPadding(5,25,0,0);
-                layout.addView(subject);
-
-                final EditText subjectEdit = new EditText(getContext());
-                subjectEdit.setText(metaSubject);
-                layout.addView(subjectEdit);
-
-                final TextView keywords = new TextView(getContext());
-                keywords.setText(R.string.pref_metaKeywords);
-                keywords.setPadding(5,25,0,0);
-                layout.addView(keywords);
-
-                final EditText keywordsEdit = new EditText(getContext());
-                keywordsEdit.setText(metaKeywords);
-                layout.addView(keywordsEdit);
-
-                final AlertDialog d = new AlertDialog.Builder(getActivity())
-                        .setView(layout)
-                        .setCancelable(true)
-                        .setPositiveButton(R.string.toast_yes, new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                String au = authorEdit.getText().toString().trim();
-                                String cr = creatorEdit.getText().toString().trim();
-                                String su = subjectEdit.getText().toString().trim();
-                                String kw = keywordsEdit.getText().toString().trim();
-                                sharedPref.edit()
-                                        .putString("metaAuthor", au)
-                                        .putString("metaCreator", cr)
-                                        .putString("metaSubject", su)
-                                        .putString("metaKeywords", kw)
-                                        .apply();
-                            }
-                        })
-                        .setNegativeButton(R.string.toast_cancel, new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                dialog.cancel();
-                            }
-                        })
-                        .create();
-
-                d.show();
-                return false;
             }
         });
 
@@ -318,10 +446,35 @@ public class add_text extends Fragment {
         return rootView;
     }
 
+    private void setTextField() {
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        title = sharedPref.getString("title", null);
+        folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+        String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                folder + title + ".pdf");
+
+        File pdfFile = new File(path);
+        String textRotate;
+
+        if (sharedPref.getBoolean ("rotate", false)) {
+            textRotate = getString(R.string.app_portrait);
+        } else {
+            textRotate = getString(R.string.app_landscape);
+        }
+
+        String text = title + " | " + textRotate;
+
+        if (pdfFile.exists()) {
+            textTitle.setText(text);
+        }
+    }
+
     private void handleSendText(Intent intent) {
         String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
         if (sharedText != null) {
             // Update UI to reflect text being shared
+
             edit.setText(sharedText);
         }
     }
@@ -334,6 +487,7 @@ public class add_text extends Fragment {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         sharedPref.edit().putString("pathPDF", FilePath).apply();
         sharedPref.edit().putString("title", FileTitle).apply();
+        setTextField();
     }
 
     @Override
@@ -347,6 +501,7 @@ public class add_text extends Fragment {
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 sharedPref.edit().putString("pathPDF", FilePath).apply();
                 sharedPref.edit().putString("title", FileTitle).apply();
+                setTextField();
 
             }
 
@@ -383,12 +538,83 @@ public class add_text extends Fragment {
                 } catch (DocumentException | IOException e) {
                     e.printStackTrace();
                 }
-
                 deleteTemp();
                 success();
-
             }
         }
+    }
+
+    private void pdtToImg () {
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        title = sharedPref.getString("title", null);
+        folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+        String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                folder + title + ".pdf");
+
+        File pdfFile = new File(path);
+        String name = pdfFile.getName();
+        int pos = name.lastIndexOf(".");
+        if (pos > 0) {
+            name = name.substring(0, pos);
+        }
+        String FileTitleWithOutExt = name.replaceFirst("[.][^.]+$", "");
+        String folderOut = folder + FileTitleWithOutExt + "/";
+
+        DecodeServiceBase decodeService = new DecodeServiceBase(new PdfContext());
+        decodeService.setContentResolver(getActivity().getContentResolver());
+
+        // a bit long running
+        decodeService.open(Uri.fromFile(pdfFile));
+
+        int pageCount = decodeService.getPageCount();
+        for (int i = 0; i < pageCount; i++) {
+            CodecPage page = decodeService.getPage(i);
+            RectF rectF = new RectF(0, 0, 1, 1);
+
+            // do a fit center to A4 Size image 2480x3508
+            int with = (page.getWidth()) * 2;
+            int height = (page.getHeight()) * 2;
+
+            // Long running
+            Bitmap bitmap = page.renderBitmap(with, height, rectF);
+
+            try {
+                new File(Environment.getExternalStorageDirectory() + folderOut ).mkdirs();
+                File outputFile = new File(Environment.getExternalStorageDirectory() + folderOut, FileTitleWithOutExt + "_" + String.format(Locale.GERMAN, "%03d", i + 1) + ".jpg");
+                FileOutputStream outputStream = new FileOutputStream(outputFile);
+
+                // a bit long running
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+
+                outputStream.close();
+            } catch (IOException e) {
+                Snackbar.make(edit, getString(R.string.toast_successfully_not), Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        }
+
+        Snackbar snackbar = Snackbar
+                .make(edit, getString(R.string.toast_wait), Snackbar.LENGTH_LONG)
+                .setAction(getString(R.string.toast_yes), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                        folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+                        File directory = new File(Environment.getExternalStorageDirectory() + folder);
+
+                        Intent target = new Intent(Intent.ACTION_VIEW);
+                        target.setDataAndType(Uri.fromFile(directory), "resource/folder");
+
+                        try {
+                            startActivity (target);
+                        } catch (ActivityNotFoundException e) {
+                            Snackbar.make(edit, getString(R.string.toast_install_folder), Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        }
+                    }
+                });
+        snackbar.show();
     }
 
     private void createPDF() {
@@ -407,7 +633,15 @@ public class add_text extends Fragment {
 
     private void mergePDF(List<InputStream> list, OutputStream outputStream)
             throws DocumentException, IOException {
-        Document document = new Document();
+
+        Document document;
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        if (sharedPref.getBoolean ("rotate", false)) {
+            document = new Document(PageSize.A4);
+        } else {
+            document = new Document(PageSize.A4.rotate());
+        }
+
         PdfWriter writer = PdfWriter.getInstance(document, outputStream);
         document.open();
         PdfContentByte cb = writer.getDirectContent();
@@ -499,7 +733,13 @@ public class add_text extends Fragment {
                 File outputFile = new File(Environment.getExternalStorageDirectory() +  "/" + "123456.pdf");
                 if (!outputFile.exists()) outputFile.createNewFile();
 
-                Document document = new Document(PageSize.A4);
+                Document document;
+                if (sharedPref.getBoolean ("rotate", false)) {
+                    document = new Document(PageSize.A4);
+                } else {
+                    document = new Document(PageSize.A4.rotate());
+                }
+
                 PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(outputFile));
                 document.open();
                 PdfContentByte cb = writer.getDirectContent();
@@ -556,13 +796,19 @@ public class add_text extends Fragment {
             File outputFile = new File(outputPdfPath);
             if (!outputFile.exists()) outputFile.createNewFile();
 
-            Document document = new Document(PageSize.A4);
+            Document document;
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            if (sharedPref.getBoolean ("rotate", false)) {
+                document = new Document(PageSize.A4);
+            } else {
+                document = new Document(PageSize.A4.rotate());
+            }
+
             PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(outputFile));
             document.open();
             PdfContentByte cb = writer.getDirectContent();
 
             // Load existing PDF
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             title = sharedPref.getString("title", null);
             folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
             String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
@@ -670,13 +916,10 @@ public class add_text extends Fragment {
 
         if (sharedPref.getBoolean ("backup", false)){
 
-            title = sharedPref.getString("title", null);
-
             InputStream in;
             OutputStream out;
 
             try {
-
                 title = sharedPref.getString("title", null);
                 folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
                 String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +

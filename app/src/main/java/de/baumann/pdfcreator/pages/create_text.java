@@ -19,10 +19,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.itextpdf.text.Document;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
@@ -43,7 +44,8 @@ public class create_text extends Fragment {
 
     private String title;
     private String folder;
-    private static EditText edit;
+    private EditText edit;
+    private TextView textTitle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -119,6 +121,7 @@ public class create_text extends Fragment {
                                         pdfFile.delete();
                                     }
                                     edit.setText("");
+                                    setTextField();
                                 }
                             })
                             .setNegativeButton(R.string.toast_cancel, new DialogInterface.OnClickListener() {
@@ -155,23 +158,43 @@ public class create_text extends Fragment {
         });
 
         edit = (EditText) rootView.findViewById(R.id.editText);
+        textTitle = (TextView) rootView.findViewById(R.id.textTitle);
+        textTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                if (sharedPref.getBoolean ("rotate", false)) {
+                    sharedPref.edit()
+                            .putBoolean("rotate", false)
+                            .apply();
+                } else {
+                    sharedPref.edit()
+                            .putBoolean("rotate", true)
+                            .apply();
+                }
+                setTextField();
+            }
+        });
+        setTextField();
 
-        ImageButton ib_1 = (ImageButton) rootView.findViewById(R.id.imageButton_1);
-        ib_1.setVisibility(View.GONE);
+        FloatingActionButton fab_1 = (FloatingActionButton) rootView.findViewById(R.id.fab_1);
+        fab_1.setVisibility(View.INVISIBLE);
 
-        ImageButton ib_2 = (ImageButton) rootView.findViewById(R.id.imageButton_2);
-        ib_2.setVisibility(View.GONE);
+        FloatingActionButton fab_2 = (FloatingActionButton) rootView.findViewById(R.id.fab_2);
+        fab_2.setVisibility(View.INVISIBLE);
 
-        ImageButton ib_3 = (ImageButton) rootView.findViewById(R.id.imageButton_3);
-        ib_3.setVisibility(View.GONE);
+        FloatingActionButton fab_3 = (FloatingActionButton) rootView.findViewById(R.id.fab_3);
+        fab_3.setVisibility(View.INVISIBLE);
 
-        ImageButton ib_4 = (ImageButton) rootView.findViewById(R.id.imageButton_4);
-        ib_4.setVisibility(View.GONE);
+        FloatingActionButton fab_4 = (FloatingActionButton) rootView.findViewById(R.id.fab_4);
+        fab_4.setVisibility(View.INVISIBLE);
 
-        ImageButton ib_5 = (ImageButton) rootView.findViewById(R.id.imageButton_5);
-        ib_5.setVisibility(View.GONE);
+        FloatingActionButton fab_5 = (FloatingActionButton) rootView.findViewById(R.id.fab_5);
+        fab_5.setVisibility(View.INVISIBLE);
 
-        // Get intent, action and MIME type
+        FloatingActionButton fab_6 = (FloatingActionButton) rootView.findViewById(R.id.fab_6);
+        fab_6.setVisibility(View.INVISIBLE);
+
         Intent intent = getActivity().getIntent();
         String action = intent.getAction();
         String type = intent.getType();
@@ -179,6 +202,8 @@ public class create_text extends Fragment {
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if (type.startsWith("text/")) {
                 handleSendText(intent); // Handle single image being sent
+            } else if (type.startsWith("application/pdf")) {
+                handleSendPDF(intent); // Handle single image being sent
             }
         }
 
@@ -190,6 +215,41 @@ public class create_text extends Fragment {
         if (sharedText != null) {
             // Update UI to reflect text being shared
             edit.setText(sharedText);
+        }
+    }
+
+    private void handleSendPDF(Intent intent) {
+        Uri pdfUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+
+        String FilePath = pdfUri.getPath();
+        String FileTitle = FilePath.substring(FilePath.lastIndexOf("/")+1);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sharedPref.edit().putString("pathPDF", FilePath).apply();
+        sharedPref.edit().putString("title", FileTitle).apply();
+        setTextField();
+    }
+
+    private void setTextField() {
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        title = sharedPref.getString("title", null);
+        folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+        String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                folder + title + ".pdf");
+
+        File pdfFile = new File(path);
+        String textRotate;
+
+        if (sharedPref.getBoolean ("rotate", false)) {
+            textRotate = getString(R.string.app_portrait);
+        } else {
+            textRotate = getString(R.string.app_landscape);
+        }
+
+        String text = title + " | " + textRotate;
+
+        if (pdfFile.exists()) {
+            textTitle.setText(text);
         }
     }
 
@@ -246,7 +306,14 @@ public class create_text extends Fragment {
             File outputFile = new File(outputPdfPath);
             if (!outputFile.exists()) outputFile.createNewFile();
 
-            Document document = new Document();
+            Document document;
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            if (sharedPref.getBoolean ("rotate", false)) {
+                document = new Document(PageSize.A4);
+            } else {
+                document = new Document(PageSize.A4.rotate());
+            }
+
             PdfWriter.getInstance(document, new FileOutputStream(outputFile));
             document.open();
             document.add (new Paragraph(paragraph));

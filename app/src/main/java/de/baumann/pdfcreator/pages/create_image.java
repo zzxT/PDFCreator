@@ -24,9 +24,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
@@ -54,16 +54,14 @@ public class create_image extends Fragment {
     private String title;
     private String folder;
 
-    private static ImageView img;
+    private ImageView img;
+    private TextView textTitle;
     private int imgquality_int;
-
-    private ImageButton ib_4;
-    private ImageButton ib_6;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_image, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_image, container, false);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         final String imgQuality = sharedPref.getString("imageQuality", "80");
@@ -76,8 +74,6 @@ public class create_image extends Fragment {
 
                 File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/pdf_temp.jpg");
                 if(imgFile.exists()){
-                    ib_4.setVisibility(View.GONE);
-                    ib_6.setVisibility(View.GONE);
 
                     final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
@@ -133,6 +129,7 @@ public class create_image extends Fragment {
                                     }
 
                                     img.setImageResource(R.drawable.image);
+                                    setTextField();
 
                                     File pdfFile = new File(Environment.getExternalStorageDirectory() +  "/" + title + ".pdf");
                                     if(pdfFile.exists()){
@@ -178,50 +175,20 @@ public class create_image extends Fragment {
             }
         });
 
-        img=(ImageView)rootView.findViewById(R.id.imageView);
-
-        ImageButton ib_1 = (ImageButton) rootView.findViewById(R.id.imageButton_1);
-        ib_1.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab_1 = (FloatingActionButton) rootView.findViewById(R.id.fab_1);
+        fab_1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-
-                ib_4.setVisibility(View.VISIBLE);
-                ib_6.setVisibility(View.VISIBLE);
+            public void onClick(View view) {
 
                 selectImage_1();
             }
         });
 
-        ImageButton ib_3 = (ImageButton) rootView.findViewById(R.id.imageButton_3);
-        ib_3.setVisibility(View.GONE);
-
-        ib_4 = (ImageButton) rootView.findViewById(R.id.imageButton_4);
-        ib_4.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab_2 = (FloatingActionButton) rootView.findViewById(R.id.fab_2);
+        fab_2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/pdf_temp.jpg");
-                if(imgFile.exists()){
-                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    sharedPref.edit()
-                            .putInt("startFragment", 0)
-                            .putBoolean("appStarted", false)
-                            .apply();
+            public void onClick(View view) {
 
-                    Intent intent = new Intent(getActivity(), ActivityEditor.class);
-                    startActivity(intent);
-                    getActivity().overridePendingTransition(0, 0);
-                    getActivity().finish();
-                } else {
-                    Snackbar.make(img, getString(R.string.toast_noImage), Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            }
-        });
-
-        ib_6 = (ImageButton) rootView.findViewById(R.id.imageButton_6);
-        ib_6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/pdf_temp.jpg");
                 if(imgFile.exists()){
                     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -241,6 +208,59 @@ public class create_image extends Fragment {
             }
         });
 
+        FloatingActionButton fab_3 = (FloatingActionButton) rootView.findViewById(R.id.fab_3);
+        fab_3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/pdf_temp.jpg");
+                if(imgFile.exists()){
+                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    sharedPref.edit()
+                            .putInt("startFragment", 0)
+                            .putBoolean("appStarted", false)
+                            .apply();
+
+                    Intent intent = new Intent(getActivity(), ActivityEditor.class);
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(0, 0);
+                    getActivity().finish();
+                } else {
+                    Snackbar.make(img, getString(R.string.toast_noImage), Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            }
+        });
+
+        FloatingActionButton fab_4 = (FloatingActionButton) rootView.findViewById(R.id.fab_4);
+        fab_4.setVisibility(View.GONE);
+
+        img=(ImageView)rootView.findViewById(R.id.imageView);
+        File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/pdf_temp.jpg");
+        if(imgFile.exists()){
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            img.setImageBitmap(myBitmap);
+        }
+
+        textTitle = (TextView) rootView.findViewById(R.id.textTitle);
+        textTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                if (sharedPref.getBoolean ("rotate", false)) {
+                    sharedPref.edit()
+                            .putBoolean("rotate", false)
+                            .apply();
+                } else {
+                    sharedPref.edit()
+                            .putBoolean("rotate", true)
+                            .apply();
+                }
+                setTextField();
+            }
+        });
+        setTextField();
+
         // Get intent, action and MIME type
         Intent intent = getActivity().getIntent();
         String action = intent.getAction();
@@ -249,19 +269,9 @@ public class create_image extends Fragment {
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if (type.startsWith("image/")) {
                 handleSendImage(intent); // Handle single image being sent
+            } else if (type.startsWith("application/pdf")) {
+                handleSendPDF(intent); // Handle single image being sent
             }
-        }
-
-        img=(ImageView)rootView.findViewById(R.id.imageView);
-        File imgFile = new File(Environment.getExternalStorageDirectory() + "/Pictures/.pdf_temp/pdf_temp.jpg");
-        if(imgFile.exists()){
-            ib_4.setVisibility(View.VISIBLE);
-            ib_6.setVisibility(View.VISIBLE);
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            img.setImageBitmap(myBitmap);
-        } else {
-            ib_4.setVisibility(View.GONE);
-            ib_6.setVisibility(View.GONE);
         }
 
         return rootView;
@@ -290,6 +300,41 @@ public class create_image extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void handleSendPDF(Intent intent) {
+        Uri pdfUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+
+        String FilePath = pdfUri.getPath();
+        String FileTitle = FilePath.substring(FilePath.lastIndexOf("/")+1);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sharedPref.edit().putString("pathPDF", FilePath).apply();
+        sharedPref.edit().putString("title", FileTitle).apply();
+        setTextField();
+    }
+
+    private void setTextField() {
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        title = sharedPref.getString("title", null);
+        folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+        String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                folder + title + ".pdf");
+
+        File pdfFile = new File(path);
+        String textRotate;
+
+        if (sharedPref.getBoolean ("rotate", false)) {
+            textRotate = getString(R.string.app_portrait);
+        } else {
+            textRotate = getString(R.string.app_landscape);
+        }
+
+        String text = title + " | " + textRotate;
+
+        if (pdfFile.exists()) {
+            textTitle.setText(text);
         }
     }
 
@@ -350,14 +395,28 @@ public class create_image extends Fragment {
             File outputFile = new File(outputPdfPath);
             if (!outputFile.exists()) outputFile.createNewFile();
 
-            Document document = new Document();
+            Document document;
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            if (sharedPref.getBoolean ("rotate", false)) {
+                document = new Document(PageSize.A4);
+            } else {
+                document = new Document(PageSize.A4.rotate());
+            }
+
             PdfWriter.getInstance(document, new FileOutputStream(outputFile));
             document.open();
 
             Image image = Image.getInstance(jpgFilePath);
-            if (PageSize.A4.getWidth() - image.getWidth() < 0) {
-                image.scaleToFit(PageSize.A4.getWidth() - document.leftMargin() - document.rightMargin(),
-                PageSize.A4.getHeight() - document.topMargin() - document.bottomMargin());
+            if (sharedPref.getBoolean ("rotate", false)) {
+                if (PageSize.A4.getWidth() - image.getWidth() < 0) {
+                    image.scaleToFit(PageSize.A4.getWidth() - document.leftMargin() - document.rightMargin(),
+                            PageSize.A4.getHeight() - document.topMargin() - document.bottomMargin());
+                }
+            } else {
+                if (PageSize.A4.rotate().getWidth() - image.getWidth() < 0) {
+                    image.scaleToFit(PageSize.A4.rotate().getWidth() - document.leftMargin() - document.rightMargin(),
+                            PageSize.A4.rotate().getHeight() - document.topMargin() - document.bottomMargin());
+                }
             }
             image.setAlignment(Element.ALIGN_CENTER);
 

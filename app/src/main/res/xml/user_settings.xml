@@ -18,6 +18,12 @@
             android:key="backup"
             android:defaultValue="true" />
 
+        <CheckBoxPreference
+            android:title="@string/pref_rotate"
+            android:summary="@string/pref_rotate_summary"
+            android:key="rotate"
+            android:defaultValue="true" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

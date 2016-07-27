@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity">
 
     <ImageView
@@ -13,54 +14,77 @@
         android:layout_alignParentStart="false"
         android:layout_alignParentEnd="false"
         android:scaleType="fitCenter"
-        android:layout_margin="@dimen/fab_margin"
-        android:layout_centerInParent="true"
-        tools:ignore="ContentDescription" />
-
-    <ImageButton
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:id="@+id/imageButton_1"
-        android:src="@drawable/ic_camera_iris_white_48dp"
-        android:scaleType="fitCenter"
+        tools:ignore="ContentDescription"
+        android:layout_centerHorizontal="true"
         android:layout_marginLeft="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
-        android:layout_alignTop="@+id/imageView"
-        android:layout_alignParentEnd="true"
-        tools:ignore="ContentDescription" />
+        android:layout_marginTop="@dimen/fab_margin"
+        android:layout_above="@+id/textTitle" />
 
-    <ImageButton
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:id="@+id/imageButton_3"
+    <android.support.design.widget.FloatingActionButton
+        app:fabSize="mini"
+        app:backgroundTint="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:id="@+id/fab_1"
+        android:src="@drawable/ic_camera_iris_white_48dp"
+        android:scaleType="fitCenter"
+        android:layout_marginRight="@dimen/fab_margin"
+        tools:ignore="ContentDescription"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:layout_marginBottom="@dimen/fab_margin" />
+
+    <android.support.design.widget.FloatingActionButton
+        app:fabSize="mini"
+        app:backgroundTint="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:id="@+id/fab_2"
+        android:src="@drawable/ic_crop_white_48dp"
+        android:scaleType="fitCenter"
+        android:layout_marginRight="@dimen/fab_margin"
+        tools:ignore="ContentDescription"
+        android:layout_below="@+id/fab_1"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/fab_margin" />
+
+    <android.support.design.widget.FloatingActionButton
+        app:fabSize="mini"
+        app:backgroundTint="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:id="@+id/fab_3"
+        android:src="@drawable/ic_auto_fix_white_48dp"
+        android:scaleType="fitCenter"
+        android:layout_marginRight="@dimen/fab_margin"
+        tools:ignore="ContentDescription"
+        android:layout_below="@+id/fab_2"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/fab_margin" />
+
+    <android.support.design.widget.FloatingActionButton
+        app:fabSize="mini"
+        app:backgroundTint="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:id="@+id/fab_4"
         android:src="@drawable/ic_file_pdf_white_48dp"
         android:scaleType="fitCenter"
         android:layout_marginRight="@dimen/fab_margin"
-        android:layout_below="@+id/imageButton_4"
+        tools:ignore="ContentDescription"
+        android:layout_below="@+id/fab_3"
         android:layout_alignParentEnd="true"
-        tools:ignore="ContentDescription" />
-
-    <ImageButton
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:id="@+id/imageButton_4"
-        android:scaleType="fitCenter"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:src="@drawable/ic_auto_fix_white_48dp"
-        android:layout_below="@+id/imageButton_6"
-        android:layout_alignParentEnd="true"
-        tools:ignore="ContentDescription" />
-
-    <ImageButton
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:id="@+id/imageButton_6"
-        android:scaleType="fitCenter"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:src="@drawable/ic_crop_white_48dp"
-        android:layout_below="@+id/imageButton_1"
-        android:layout_alignParentEnd="true"
-        tools:ignore="ContentDescription" />
+        android:layout_marginBottom="@dimen/fab_margin" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -74,5 +98,13 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="false"
         android:layout_marginBottom="@dimen/fab_margin" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textTitle"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="@dimen/fab_margin" />
 
 </RelativeLayout>

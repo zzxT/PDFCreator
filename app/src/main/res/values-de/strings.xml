@@ -7,6 +7,8 @@
         completely close the app or restart the phone. If you don\'t permit the storage access but want to use the
         screenshot function at a later time, you can grant the permission later. Please open then: system settings - apps -
         weather. In the permissions section you can grant the \"write storage permission\".</string>
+    <string name="app_portrait">Hochformat</string>
+    <string name="app_landscape">Querformat</string>
 
 
     // App titles
@@ -24,7 +26,8 @@
     <string name="toast_yes">OK</string>
     <string name="toast_cancel">Abbrechen</string>
     <string name="toast_successfully">PDF erfolgreich erstellt.</string>
-    <string name="toast_successfully_not">Beim erstellen der PDF-Datei ist ein Fehler passiert.</string>
+    <string name="toast_wait">Bilder erstellt. Ordner öffnen?</string>
+    <string name="toast_successfully_not">Es ist ein Fehler passiert.</string>
     <string name="toast_open">Öffnen?</string>
     <string name="toast_install_pdf">Bitte einen PDF Reader installieren.</string>
     <string name="toast_install_folder">Bitte einen Dateimanager installieren..</string>
@@ -136,6 +139,10 @@
     <string name="pref_metaSubject">Betreff</string>
     <string name="pref_metaSubject_summary">Betreff deiner PDF-Datei: \"This example shows how to add metadata\".
         Kann durch langes Drücken des Tagicons im \"+text | …\"-Tab geändert werden.</string>
+
+    <string name="pref_rotate">Hochformat</string>
+    <string name="pref_rotate_summary">Hochformat für PDF-Seiten benutzen. Du kannst einfach zwischen Hoch- und Querformat wechseln,
+        indem du auf den PDF-Namen am unteren Bildschirmrand klickst. Das aktuell eingestellte Format wird ebenfalls angezeigt.</string>
 
     <string-array name="listArrayImage">
         <item>Hoch (100%)</item>

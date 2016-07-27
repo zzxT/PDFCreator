@@ -7,6 +7,8 @@
         completely close the app or restart the phone. If you don\'t permit the storage access but want to use the
         screenshot function at a later time, you can grant the permission later. Please open then: system settings - apps -
         weather. In the permissions section you can grant the \"write storage permission\".</string>
+    <string name="app_portrait">Portrait</string>
+    <string name="app_landscape">Landscape</string>
 
 
     // App titles
@@ -24,7 +26,8 @@
     <string name="toast_yes">OK</string>
     <string name="toast_cancel">Cancel</string>
     <string name="toast_successfully">PDF successfully created.</string>
-    <string name="toast_successfully_not">An error occurred while creating PDF.</string>
+    <string name="toast_wait">Images successfully created. Open folder?</string>
+    <string name="toast_successfully_not">An error occurred.</string>
     <string name="toast_open">Open?</string>
     <string name="toast_install_pdf">Please install a PDF reader.</string>
     <string name="toast_install_folder">Please install a file manager.</string>
@@ -136,6 +139,10 @@
     <string name="pref_metaSubject_summary">Subject of your PDF file: \"This example shows how to add metadata\".  Can be changed
         by long pressing the tag icon in the \"+text | …\" tab.</string>
 
+    <string name="pref_rotate">Portrait</string>
+    <string name="pref_rotate_summary">Use portrait format for PDF pages. You can easily switch between portrait and landscape by
+        clicking the displayed pdf name at the bottom of the screen. The actual format is also shown.</string>
+
     <string-array name="listArrayImage">
         <item>High (100%)</item>
         <item>Normal (80%)</item>
@@ -176,6 +183,9 @@
     <string name="lib_text" translatable="false">
         &lt;b>Android-Image-Cropper&lt;/b>&lt;br>
         https://github.com/ArthurHub/Android-Image-Cropper&lt;br>&lt;br>
+
+        &lt;b>Android PDFView&lt;/b>&lt;br>
+        https://github.com/JoanZapata/android-pdfview&lt;br>&lt;br>
 
         &lt;b>GPUImage for Android&lt;/b>&lt;br>
         https://github.com/CyberAgent/android-gpuimage&lt;br>&lt;br>

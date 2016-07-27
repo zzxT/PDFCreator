@@ -50,12 +50,8 @@ import de.baumann.pdfcreator.UserSettingsActivity;
 public final class MainFragment extends Fragment
         implements CropImageView.OnSetImageUriCompleteListener, CropImageView.OnGetCroppedImageCompleteListener {
 
-    //region: Fields and Consts
-
     private CropDemoPreset mDemoPreset;
-
     private CropImageView mCropImageView;
-    //endregion
 
     /**
      * Returns a new instance of this fragment for the given section number.
@@ -95,7 +91,8 @@ public final class MainFragment extends Fragment
                     public void run() {
                         getActivity().finish();
                     }
-                }, 3000);
+                }, 5000);
+
             }
         });
 
