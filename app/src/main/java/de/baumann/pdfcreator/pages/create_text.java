@@ -247,9 +247,12 @@ public class create_text extends Fragment {
         }
 
         String text = title + " | " + textRotate;
+        String text2 = getString(R.string.toast_noPDF) + " | " + textRotate;
 
         if (pdfFile.exists()) {
             textTitle.setText(text);
+        } else {
+            textTitle.setText(text2);
         }
     }
 

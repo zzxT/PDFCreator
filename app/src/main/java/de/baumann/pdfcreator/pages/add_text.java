@@ -26,11 +26,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfImportedPage;
+import com.itextpdf.text.pdf.PdfCopy;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -45,8 +43,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import de.baumann.pdfcreator.R;
@@ -91,7 +87,10 @@ public class add_text extends Fragment {
 
                         backup();
                         createPDF();
+                        mergePDF();
+                        success();
                         deleteTemp();
+                        deleteTemp2();
                         edit.setText("");
                     } else {
                         Snackbar.make(edit, getString(R.string.toast_noPDF), Snackbar.LENGTH_LONG)
@@ -462,11 +461,13 @@ public class add_text extends Fragment {
         } else {
             textRotate = getString(R.string.app_landscape);
         }
-
         String text = title + " | " + textRotate;
+        String text2 = getString(R.string.toast_noPDF) + " | " + textRotate;
 
         if (pdfFile.exists()) {
             textTitle.setText(text);
+        } else {
+            textTitle.setText(text2);
         }
     }
 
@@ -474,7 +475,6 @@ public class add_text extends Fragment {
         String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
         if (sharedText != null) {
             // Update UI to reflect text being shared
-
             edit.setText(sharedText);
         }
     }
@@ -515,30 +515,39 @@ public class add_text extends Fragment {
                 sharedPref.edit().putString("pathPDF2", FilePath).apply();
                 sharedPref.edit().putString("title2", FileTitle).apply();
 
-                List<InputStream> list = new ArrayList<>();
+                // Load existing PDF
+                title = sharedPref.getString("title2", null);
+                folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+                String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                        folder + title + ".pdf");
+
+                String path2 = sharedPref.getString("pathPDF2", null);
+
+                // Resulting pdf
+                String path3 = Environment.getExternalStorageDirectory() +  "/" + "1234567.pdf";
+
                 try {
-
-                    // Load existing PDF
-                    title = sharedPref.getString("title2", null);
-                    folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
-                    String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
-                            folder + title + ".pdf");
-
-                    String path2 = sharedPref.getString("pathPDF2", null);
-
-                    list.add(new FileInputStream(new File(path)));
-                    assert path2 != null;
-                    list.add(new FileInputStream(new File(path2)));
-
-                    // Resulting pdf
-                    OutputStream out = new FileOutputStream(new File(Environment.getExternalStorageDirectory() +  "/" + "123456.pdf"));
-
-                    mergePDF(list, out);
-
-                } catch (DocumentException | IOException e) {
-                    e.printStackTrace();
+                    String[] files = { path, path2 };
+                    Document document = new Document();
+                    PdfCopy copy = new PdfCopy(document, new FileOutputStream(path3));
+                    document.open();
+                    PdfReader ReadInputPDF;
+                    int number_of_pages;
+                    for (String file : files) {
+                        ReadInputPDF = new PdfReader(file);
+                        number_of_pages = ReadInputPDF.getNumberOfPages();
+                        for (int page = 0; page < number_of_pages; ) {
+                            copy.addPage(copy.getImportedPage(ReadInputPDF, ++page));
+                        }
+                    }
+                    document.close();
                 }
-                deleteTemp();
+                catch (Exception i)
+                {
+                    Snackbar.make(edit, getString(R.string.toast_successfully_not), Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+                deleteTemp2();
                 success();
             }
         }
@@ -631,35 +640,43 @@ public class add_text extends Fragment {
                 .setAction("Action", null).show();
     }
 
-    private void mergePDF(List<InputStream> list, OutputStream outputStream)
-            throws DocumentException, IOException {
+    private void mergePDF() {
 
-        Document document;
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        if (sharedPref.getBoolean ("rotate", false)) {
-            document = new Document(PageSize.A4);
-        } else {
-            document = new Document(PageSize.A4.rotate());
-        }
 
-        PdfWriter writer = PdfWriter.getInstance(document, outputStream);
-        document.open();
-        PdfContentByte cb = writer.getDirectContent();
+        // Load existing PDF
+        title = sharedPref.getString("title2", null);
+        folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+        String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                folder + title + ".pdf");
 
-        for (InputStream in : list) {
-            PdfReader reader = new PdfReader(in);
-            for (int i = 1; i <= reader.getNumberOfPages(); i++) {
-                document.newPage();
-                //import the page from source pdf
-                PdfImportedPage page = writer.getImportedPage(reader, i);
-                //add the page to the destination pdf
-                cb.addTemplate(page, 0, 0);
+        String path2 = Environment.getExternalStorageDirectory() +  "/" + "123456.pdf";
+
+        // Resulting pdf
+        String path3 = Environment.getExternalStorageDirectory() +  "/" + "1234567.pdf";
+
+        try {
+            String[] files = { path, path2 };
+            Document document = new Document();
+            PdfCopy copy = new PdfCopy(document, new FileOutputStream(path3));
+            document.open();
+            PdfReader ReadInputPDF;
+            int number_of_pages;
+            for (String file : files) {
+                ReadInputPDF = new PdfReader(file);
+                number_of_pages = ReadInputPDF.getNumberOfPages();
+                for (int page = 0; page < number_of_pages; ) {
+                    copy.addPage(copy.getImportedPage(ReadInputPDF, ++page));
+                }
             }
+            document.close();
         }
-
-        outputStream.flush();
-        document.close();
-        outputStream.close();
+        catch (Exception i)
+        {
+            Snackbar.make(edit, getString(R.string.toast_successfully_not), Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }
+        deleteTemp();
     }
 
     private void deletePage() {
@@ -729,47 +746,44 @@ public class add_text extends Fragment {
                 String metaSubject = sharedPref.getString("metaSubject", "");
                 String metaKeywords = sharedPref.getString("metaKeywords", "");
 
-                // Create output file if needed
-                File outputFile = new File(Environment.getExternalStorageDirectory() +  "/" + "123456.pdf");
-                if (!outputFile.exists()) outputFile.createNewFile();
-
-                Document document;
-                if (sharedPref.getBoolean ("rotate", false)) {
-                    document = new Document(PageSize.A4);
-                } else {
-                    document = new Document(PageSize.A4.rotate());
-                }
-
-                PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(outputFile));
-                document.open();
-                PdfContentByte cb = writer.getDirectContent();
-
                 // Load existing PDF
-
-                title = sharedPref.getString("title", null);
+                title = sharedPref.getString("title2", null);
                 folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
                 String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
                         folder + title + ".pdf");
-                PdfReader reader = new PdfReader(path);
 
-                int n = reader.getNumberOfPages();
 
-                for (int i = 1; i <= n; i++) {
-                    document.newPage();
-                    //import the page from source pdf
-                    PdfImportedPage page = writer.getImportedPage(reader, i);
-                    //add the page to the destination pdf
-                    cb.addTemplate(page, 0, 0);
+                // Resulting pdf
+                String path3 = Environment.getExternalStorageDirectory() +  "/" + "1234567.pdf";
+
+                try {
+                    String[] files = { path };
+                    Document document = new Document();
+                    PdfCopy copy = new PdfCopy(document, new FileOutputStream(path3));
+                    document.open();
+                    PdfReader ReadInputPDF;
+                    int number_of_pages;
+                    for (String file : files) {
+                        ReadInputPDF = new PdfReader(file);
+                        number_of_pages = ReadInputPDF.getNumberOfPages();
+                        for (int page = 0; page < number_of_pages; ) {
+                            copy.addPage(copy.getImportedPage(ReadInputPDF, ++page));
+                        }
+                    }
+                    document.addTitle(title);
+                    document.addAuthor(metaAuthor);
+                    document.addSubject(metaSubject);
+                    document.addKeywords(metaKeywords);
+                    document.addCreator(metaCreator);
+                    document.close();
+                    success();
                 }
-
-                // Add your new data / text here
-                // for example...
-                document.addTitle(title);
-                document.addAuthor(metaAuthor);
-                document.addSubject(metaSubject);
-                document.addKeywords(metaKeywords);
-                document.addCreator(metaCreator);
-                document.close();
+                catch (Exception i)
+                {
+                    Snackbar.make(edit, getString(R.string.toast_successfully_not), Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+                deleteTemp2();
                 success();
 
             }
@@ -804,32 +818,10 @@ public class add_text extends Fragment {
                 document = new Document(PageSize.A4.rotate());
             }
 
-            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(outputFile));
+            PdfWriter.getInstance(document, new FileOutputStream(outputFile));
             document.open();
-            PdfContentByte cb = writer.getDirectContent();
-
-            // Load existing PDF
-            title = sharedPref.getString("title", null);
-            folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
-            String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
-                    folder + title + ".pdf");
-            PdfReader reader = new PdfReader(path);
-
-            int n = reader.getNumberOfPages();
-
-            for (int i = 1; i <= n; i++) {
-                document.newPage();
-                //import the page from source pdf
-                PdfImportedPage page = writer.getImportedPage(reader, i);
-                //add the page to the destination pdf
-                cb.addTemplate(page, 0, 0);
-            }
-
-            // Add your new data / text here
-            // for example...
-
-            document.newPage();
             document.add (new Paragraph(paragraph));
+
             document.close();
 
             return true;
@@ -875,6 +867,44 @@ public class add_text extends Fragment {
         }
 
         File pdfFile = new File(Environment.getExternalStorageDirectory() +  "/" + "123456.pdf");
+        if(pdfFile.exists()){
+            pdfFile.delete();
+        }
+    }
+
+    private void deleteTemp2(){
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        title = sharedPref.getString("title", null);
+
+        InputStream in;
+        OutputStream out;
+
+        try {
+
+            title = sharedPref.getString("title", null);
+            folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+            String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                    folder + title + ".pdf");
+
+            in = new FileInputStream(Environment.getExternalStorageDirectory() +  "/" + "1234567.pdf");
+            out = new FileOutputStream(path);
+
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+            in.close();
+
+            // write the output file
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            Log.e("tag", e.getMessage());
+        }
+
+        File pdfFile = new File(Environment.getExternalStorageDirectory() +  "/" + "1234567.pdf");
         if(pdfFile.exists()){
             pdfFile.delete();
         }

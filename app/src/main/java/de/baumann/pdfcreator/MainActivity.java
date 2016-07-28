@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
             getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         }
 
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
         // Get intent, action and MIME type
         Intent intent = this.getIntent();
         String action = intent.getAction();

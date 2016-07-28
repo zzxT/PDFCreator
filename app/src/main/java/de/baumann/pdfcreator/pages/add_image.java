@@ -28,8 +28,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfImportedPage;
+import com.itextpdf.text.pdf.PdfCopy;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfWriter;
 
@@ -85,9 +84,12 @@ public class add_image extends Fragment {
 
                         title = sharedPref.getString("title", null);
 
+                        backup();
                         createPDF();
+                        mergePDF();
+                        success();
                         deleteTemp();
-
+                        deleteTemp2();
 
                     } else {
                         Snackbar.make(img, getString(R.string.toast_noPDF), Snackbar.LENGTH_LONG)
@@ -237,9 +239,12 @@ public class add_image extends Fragment {
         }
 
         String text = title + " | " + textRotate;
+        String text2 = getString(R.string.toast_noPDF) + " | " + textRotate;
 
         if (pdfFile.exists()) {
             textTitle.setText(text);
+        } else {
+            textTitle.setText(text2);
         }
     }
 
@@ -288,6 +293,7 @@ public class add_image extends Fragment {
     private boolean convertToPdf(String jpgFilePath, String outputPdfPath) {
         try {
             // Check if Jpg file exists or not
+
             File inputFile = new File(jpgFilePath);
             if (!inputFile.exists()) throw new Exception("File '" + jpgFilePath + "' doesn't exist.");
 
@@ -303,40 +309,22 @@ public class add_image extends Fragment {
                 document = new Document(PageSize.A4.rotate());
             }
 
-            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(outputFile));
+            PdfWriter.getInstance(document, new FileOutputStream(outputFile));
             document.open();
-            PdfContentByte cb = writer.getDirectContent();
-
-            // Load existing PDF
-            title = sharedPref.getString("title", null);
-            folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
-            String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
-                    folder + title + ".pdf");
-            PdfReader reader = new PdfReader(path);
-
-            int n = reader.getNumberOfPages();
-
-            for (int i = 1; i <= n; i++) {
-                document.newPage();
-                //import the page from source pdf
-                PdfImportedPage page = writer.getImportedPage(reader, i);
-                //add the page to the destination pdf
-                cb.addTemplate(page, 0, 0);
-            }
-
-            // Add your new data / text here
-            // for example...
-
-            document.newPage();
 
             Image image = Image.getInstance(jpgFilePath);
             if (sharedPref.getBoolean ("rotate", false)) {
                 if (PageSize.A4.getWidth() - image.getWidth() < 0) {
                     image.scaleToFit(PageSize.A4.getWidth() - document.leftMargin() - document.rightMargin(),
                             PageSize.A4.getHeight() - document.topMargin() - document.bottomMargin());
-                }
+                } else if (PageSize.A4.getHeight() - image.getHeight() < 0) {
+                    image.scaleToFit(PageSize.A4.getWidth() - document.leftMargin() - document.rightMargin(),
+                            PageSize.A4.getHeight() - document.topMargin() - document.bottomMargin());}
             } else {
                 if (PageSize.A4.rotate().getWidth() - image.getWidth() < 0) {
+                    image.scaleToFit(PageSize.A4.rotate().getWidth() - document.leftMargin() - document.rightMargin(),
+                            PageSize.A4.rotate().getHeight() - document.topMargin() - document.bottomMargin());
+                } else if (PageSize.A4.rotate().getHeight() - image.getHeight() < 0) {
                     image.scaleToFit(PageSize.A4.rotate().getWidth() - document.leftMargin() - document.rightMargin(),
                             PageSize.A4.rotate().getHeight() - document.topMargin() - document.bottomMargin());
                 }
@@ -359,6 +347,75 @@ public class add_image extends Fragment {
         }
 
         return false;
+    }
+
+    private void mergePDF() {
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        // Load existing PDF
+        title = sharedPref.getString("title2", null);
+        folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+        String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                folder + title + ".pdf");
+
+        String path2 = Environment.getExternalStorageDirectory() +  "/" + "123456.pdf";
+
+        // Resulting pdf
+        String path3 = Environment.getExternalStorageDirectory() +  "/" + "1234567.pdf";
+
+        try {
+            String[] files = { path, path2 };
+            Document document = new Document();
+            PdfCopy copy = new PdfCopy(document, new FileOutputStream(path3));
+            document.open();
+            PdfReader ReadInputPDF;
+            int number_of_pages;
+            for (String file : files) {
+                ReadInputPDF = new PdfReader(file);
+                number_of_pages = ReadInputPDF.getNumberOfPages();
+                for (int page = 0; page < number_of_pages; ) {
+                    copy.addPage(copy.getImportedPage(ReadInputPDF, ++page));
+                }
+            }
+            document.close();
+        }
+        catch (Exception i)
+        {
+            Snackbar.make(img, getString(R.string.toast_successfully_not), Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }
+        deleteTemp();
+    }
+
+    private void success(){
+
+        Snackbar snackbar = Snackbar
+                .make(img, getString(R.string.toast_successfully), Snackbar.LENGTH_LONG)
+                .setAction(getString(R.string.toast_open), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                        title = sharedPref.getString("title", null);
+                        folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+                        String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                                folder + title + ".pdf");
+
+                        File file = new File(path);
+                        Intent target = new Intent(Intent.ACTION_VIEW);
+                        target.setDataAndType(Uri.fromFile(file),"application/pdf");
+                        target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+                        try {
+                            startActivity(target);
+                        } catch (ActivityNotFoundException e) {
+                            // Instruct the user to install a PDF reader here, or something
+                            Snackbar.make(img, getString(R.string.toast_install_pdf), Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        }
+                    }
+                });
+        snackbar.show();
     }
 
     private void selectImage_1() {
@@ -513,6 +570,44 @@ public class add_image extends Fragment {
         }
 
         File pdfFile = new File(Environment.getExternalStorageDirectory() +  "/" + "123456.pdf");
+        if(pdfFile.exists()){
+            pdfFile.delete();
+        }
+    }
+
+    private void deleteTemp2(){
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        title = sharedPref.getString("title", null);
+
+        InputStream in;
+        OutputStream out;
+
+        try {
+
+            title = sharedPref.getString("title", null);
+            folder = sharedPref.getString("folder", "/Android/data/de.baumann.pdf/");
+            String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
+                    folder + title + ".pdf");
+
+            in = new FileInputStream(Environment.getExternalStorageDirectory() +  "/" + "1234567.pdf");
+            out = new FileOutputStream(path);
+
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+            in.close();
+
+            // write the output file
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            Log.e("tag", e.getMessage());
+        }
+
+        File pdfFile = new File(Environment.getExternalStorageDirectory() +  "/" + "1234567.pdf");
         if(pdfFile.exists()){
             pdfFile.delete();
         }

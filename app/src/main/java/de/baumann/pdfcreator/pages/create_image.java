@@ -332,9 +332,12 @@ public class create_image extends Fragment {
         }
 
         String text = title + " | " + textRotate;
+        String text2 = getString(R.string.toast_noPDF) + " | " + textRotate;
 
         if (pdfFile.exists()) {
             textTitle.setText(text);
+        } else {
+            textTitle.setText(text2);
         }
     }
 
@@ -411,9 +414,14 @@ public class create_image extends Fragment {
                 if (PageSize.A4.getWidth() - image.getWidth() < 0) {
                     image.scaleToFit(PageSize.A4.getWidth() - document.leftMargin() - document.rightMargin(),
                             PageSize.A4.getHeight() - document.topMargin() - document.bottomMargin());
-                }
+                } else if (PageSize.A4.getHeight() - image.getHeight() < 0) {
+                    image.scaleToFit(PageSize.A4.getWidth() - document.leftMargin() - document.rightMargin(),
+                            PageSize.A4.getHeight() - document.topMargin() - document.bottomMargin());}
             } else {
                 if (PageSize.A4.rotate().getWidth() - image.getWidth() < 0) {
+                    image.scaleToFit(PageSize.A4.rotate().getWidth() - document.leftMargin() - document.rightMargin(),
+                            PageSize.A4.rotate().getHeight() - document.topMargin() - document.bottomMargin());
+                } else if (PageSize.A4.rotate().getHeight() - image.getHeight() < 0) {
                     image.scaleToFit(PageSize.A4.rotate().getWidth() - document.leftMargin() - document.rightMargin(),
                             PageSize.A4.rotate().getHeight() - document.topMargin() - document.bottomMargin());
                 }
