@@ -20,6 +20,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.util.Linkify;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -93,6 +96,28 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        boolean show = sharedPref.getBoolean("help_notShow", true);
+        if (show){
+            final SpannableString s = new SpannableString(Html.fromHtml(getString(R.string.dialog_help)));
+            Linkify.addLinks(s, Linkify.WEB_URLS);
+
+            final AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this)
+                    .setTitle(R.string.app_name)
+                    .setMessage(s)
+                    .setPositiveButton(getString(R.string.toast_yes), null)
+                    .setNegativeButton(getString(R.string.toast_notAgain), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplication());
+                            dialog.cancel();
+                            sharedPref.edit()
+                                    .putBoolean("help_notShow", false)
+                                    .apply();
+                        }
+                    });
+            dialog.show();
+        }
 
         if (android.os.Build.VERSION.SDK_INT >= 23) {
             int hasWRITE_EXTERNAL_STORAGE = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);

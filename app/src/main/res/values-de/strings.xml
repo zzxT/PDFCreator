@@ -3,10 +3,11 @@
     // App
 
     <string name="app_name">PDF Creator</string>
-    <string name="app_permissions">You must grant \"Access Storage Permission\" to save pdf files. After that you should
-        completely close the app or restart the phone. If you don\'t permit the storage access but want to use the
-        screenshot function at a later time, you can grant the permission later. Please open then: system settings - apps -
-        weather. In the permissions section you can grant the \"write storage permission\".</string>
+    <string name="app_permissions">Du musst der App Zugriff auf den Gerätespeicher gewähren, um PDF-DAteien zu
+        speichern. Danach solltest du die Anwendung komplett schließen oder das Telefon neu starten.
+        Wenn du den Zugriff verweigerst und die Funktion später doch nutzen willst, kannst du die Berechtigung
+        nachträglich erteilen. Öffne dafür: Systemeinstellungen - Apps - Wetter. Im Bereich Berechtigungen kannst
+        dann die entsprechende Einstellung vornehmen..</string>
     <string name="app_portrait">Hochformat</string>
     <string name="app_landscape">Querformat</string>
 
@@ -35,6 +36,7 @@
     <string name="toast_noPDF">Bitte eine PDF-Datei auswählen.</string>
     <string name="toast_noText">Bitte Text eingeben.</string>
     <string name="toast_savedImage">Bitte warten. Bild wird gespeichert.</string>
+    <string name="toast_notAgain">Nicht mehr anzeigen</string>
 
 
     // Main menu
@@ -46,6 +48,7 @@
     <string name="action_save">Speichern</string>
     <string name="action_share_with">PDF teilen mit:</string>
     <string name="action_share_Text">Folgende Datei ist dem Anhang beigefügt:</string>
+    <string name="action_help">Hilfe</string>
 
 
     // Fragments
@@ -143,6 +146,10 @@
     <string name="pref_rotate">Hochformat</string>
     <string name="pref_rotate_summary">Hochformat für PDF-Seiten benutzen. Du kannst einfach zwischen Hoch- und Querformat wechseln,
         indem du auf den PDF-Namen am unteren Bildschirmrand klickst. Das aktuell eingestellte Format wird ebenfalls angezeigt.</string>
+
+    <string name="pref_notShow_title">Hilfe Dialog</string>
+    <string name="pref_notShow_title_summary">Hilfe Dialog beim Start anzeigen.</string>
+
 
     <string-array name="listArrayImage">
         <item>Hoch (100%)</item>

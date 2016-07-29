@@ -17,8 +17,13 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -57,6 +62,8 @@ public class add_image extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_image, container, false);
+
+        setHasOptionsMenu(true);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         final String imgQuality = sharedPref.getString("imageQuality", "80");
@@ -649,5 +656,24 @@ public class add_image extends Fragment {
                 Log.e("tag", e.getMessage());
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_help:
+
+                final SpannableString s = new SpannableString(Html.fromHtml(getString(R.string.dialog_addImage)));
+                Linkify.addLinks(s, Linkify.WEB_URLS);
+
+                final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
+                        .setTitle(R.string.add_image)
+                        .setMessage(s)
+                        .setPositiveButton(getString(R.string.toast_yes), null);
+                dialog.show();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

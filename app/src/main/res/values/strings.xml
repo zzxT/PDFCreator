@@ -35,6 +35,7 @@
     <string name="toast_noPDF">Please choose a PDF file.</string>
     <string name="toast_noText">Please enter text.</string>
     <string name="toast_savedImage">Please wait. Saving image.</string>
+    <string name="toast_notAgain">Do not show again</string>
 
 
     // Main menu
@@ -46,6 +47,7 @@
     <string name="action_save">Save</string>
     <string name="action_share_with">Share PDF with:</string>
     <string name="action_share_Text">In the attachment you can find the PDF file:</string>
+    <string name="action_help">Help</string>
 
 
     // Fragments
@@ -143,6 +145,9 @@
     <string name="pref_rotate_summary">Use portrait format for PDF pages. You can easily switch between portrait and landscape by
         clicking the displayed pdf name at the bottom of the screen. The actual format is also shown.</string>
 
+    <string name="pref_notShow_title">Help dialog</string>
+    <string name="pref_notShow_title_summary">Show the help dialog on start.</string>
+
     <string-array name="listArrayImage">
         <item>High (100%)</item>
         <item>Normal (80%)</item>
@@ -154,45 +159,6 @@
         <item>80</item>
         <item>60</item>
     </string-array>
-
-
-    //License Dialog
-
-    <string name="about_title" translatable="false">Copyright © 2016  by Gaukler Faun</string>
-    <string name="about_text" translatable="false">
-        &lt;i>For more informations visit the project site on github:&lt;br>
-        https://github.com/scoute-dich/PDFCreator&lt;/i>&lt;br>&lt;br>
-
-        This program is free software: you can redistribute it and/or modify
-        it under the terms of the GNU General Public License as published by
-        the Free Software Foundation, either version 3 of the License, or
-        (at your option) any later version.
-
-        This program is distributed in the hope that it will be useful,
-        but WITHOUT ANY WARRANTY; without even the implied warranty of
-        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-        GNU General Public License for more details.
-
-        You should have received a copy of the GNU General Public License
-        along with this program.  If not, see http://www.gnu.org/licenses.
-    </string>
-
-
-    //Library Dialog
-
-    <string name="lib_text" translatable="false">
-        &lt;b>Android-Image-Cropper&lt;/b>&lt;br>
-        https://github.com/ArthurHub/Android-Image-Cropper&lt;br>&lt;br>
-
-        &lt;b>Android PDFView&lt;/b>&lt;br>
-        https://github.com/JoanZapata/android-pdfview&lt;br>&lt;br>
-
-        &lt;b>GPUImage for Android&lt;/b>&lt;br>
-        https://github.com/CyberAgent/android-gpuimage&lt;br>&lt;br>
-
-        &lt;b>iText&lt;/b>&lt;br>
-        https://github.com/itext/itextpdf
-    </string>
 
 
     //Image cropper

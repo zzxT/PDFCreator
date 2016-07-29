@@ -24,6 +24,12 @@
             android:key="rotate"
             android:defaultValue="true" />
 
+        <CheckBoxPreference
+            android:title="@string/pref_notShow_title"
+            android:summary="@string/pref_notShow_title_summary"
+            android:key="help_notShow"
+            android:defaultValue="true" />
+
     </PreferenceCategory>
 
     <PreferenceCategory
