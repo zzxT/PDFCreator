@@ -43,7 +43,7 @@
     //Help Dialog
 
     <string name="dialog_help" translatable="false">
-        You can reach a short help dialog on every tab by pressing menu -> help.&lt;br>&lt;br>
+        You can reach a short help dialog on every tab by pressing \"menu -> help\".&lt;br>&lt;br>
 
         &lt;b>Menu&lt;/b>&lt;br>
 
@@ -53,7 +53,7 @@
         &lt;i>Settings:&lt;/i> check it out.&lt;br>
         &lt;i>Help:&lt;/i> open the help dialog for each tab.&lt;br>&lt;br>
 
-        &lt;b>Nice to know&lt;/b>&lt;br>
+        &lt;b>Nice to know:&lt;/b>&lt;br>
         At the bottom you can see the name of the actual PDF and the format. By pressing this area you can switch between portrait
         and landscape format for your PDF page.
     </string>
@@ -74,7 +74,7 @@
         &#8226; &lt;i>Edit:&lt;/i> make a few basic enhancements.&lt;br>
         &#8226; &lt;i>FAB (pink):&lt;/i> create the PDF.&lt;br>&lt;br>
 
-        &lt;b>Nice to know&lt;/b>&lt;br>
+        &lt;b>Nice to know:&lt;/b>&lt;br>
         At the bottom you can see the name of the actual PDF and the format. By pressing this area you can switch between portrait
         and landscape format for your PDF page.
     </string>
@@ -85,7 +85,7 @@
     <string name="dialog_addImage" translatable="false">
 
         &lt;b>What can I do here?&lt;/b>&lt;br>
-        Here you can add a page with an image to an existing PDF file.&lt;br>&lt;br>
+        Here you can images to an existing PDF file.&lt;br>&lt;br>
 
         &lt;b>Buttons&lt;/b>&lt;br>
         &lt;i>From top to bottom on the right side.&lt;/i>&lt;br>&lt;br>
@@ -96,7 +96,7 @@
         &#8226; &lt;i>PDF:&lt;/i> choose the PDF on which your new page will be added.&lt;br>
         &#8226; &lt;i>FAB (pink):&lt;/i> create the PDF.&lt;br>&lt;br>
 
-        &lt;b>Nice to know&lt;/b>&lt;br>
+        &lt;b>Nice to know:&lt;/b>&lt;br>
         At the bottom you can see the name of the actual PDF and the format. By pressing this area you can switch between portrait
         and landscape format for your PDF page.
     </string>
@@ -107,12 +107,12 @@
     <string name="dialog_createText" translatable="false">
 
         &lt;b>What can I do here?&lt;/b>&lt;br>
-         Here you can create a single PDF page from text.&lt;br>&lt;br>
+         Here you can create a single PDF page from text. You have also severasl options to edit existing PDF files.&lt;br>&lt;br>
 
         &lt;b>Buttons&lt;/b>&lt;br>
         &#8226; &lt;i>FAB (pink):&lt;/i> create the PDF.&lt;br>&lt;br>
 
-        &lt;b>Nice to know&lt;/b>&lt;br>
+        &lt;b>Nice to know:&lt;/b>&lt;br>
         At the bottom you can see the name of the actual PDF and the format. By pressing this area you can switch between portrait
         and landscape format for your PDF page.
     </string>
@@ -138,7 +138,7 @@
         &#8226; &lt;i>PDF:&lt;/i> choose the PDF which you will manipulate.&lt;br>
         &#8226; &lt;i>FAB (pink):&lt;/i> create the PDF.&lt;br>&lt;br>
 
-        &lt;b>Nice to know&lt;/b>&lt;br>
+        &lt;b>Nice to know:&lt;/b>&lt;br>
         At the bottom you can see the name of the actual PDF and the format. By pressing this area you can switch between portrait
         and landscape format for your PDF page.
     </string>

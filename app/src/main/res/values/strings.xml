@@ -32,7 +32,7 @@
     <string name="toast_install_pdf">Please install a PDF reader.</string>
     <string name="toast_install_folder">Please install a file manager.</string>
     <string name="toast_noImage">Please choose an image.</string>
-    <string name="toast_noPDF">Please choose a PDF file.</string>
+    <string name="toast_noPDF">Please choose or create a PDF file.</string>
     <string name="toast_noText">Please enter text.</string>
     <string name="toast_savedImage">Please wait. Saving image.</string>
     <string name="toast_notAgain">Do not show again</string>
