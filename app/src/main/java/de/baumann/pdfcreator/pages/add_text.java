@@ -301,7 +301,8 @@ public class add_text extends Fragment {
                 if (pdfFile.exists()) {
                     backup();
                     addMeta();
-                    deleteTemp();
+                    deleteTemp2();
+                    success();
                 } else {
                     Snackbar.make(edit, getString(R.string.toast_noPDF), Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
@@ -759,23 +760,19 @@ public class add_text extends Fragment {
                 String path = sharedPref.getString("pathPDF", Environment.getExternalStorageDirectory() +
                         folder + title + ".pdf");
 
-
                 // Resulting pdf
                 String path3 = Environment.getExternalStorageDirectory() +  "/" + "1234567.pdf";
 
                 try {
-                    String[] files = { path };
                     Document document = new Document();
                     PdfCopy copy = new PdfCopy(document, new FileOutputStream(path3));
                     document.open();
                     PdfReader ReadInputPDF;
                     int number_of_pages;
-                    for (String file : files) {
-                        ReadInputPDF = new PdfReader(file);
-                        number_of_pages = ReadInputPDF.getNumberOfPages();
-                        for (int page = 0; page < number_of_pages; ) {
-                            copy.addPage(copy.getImportedPage(ReadInputPDF, ++page));
-                        }
+                    ReadInputPDF = new PdfReader(path);
+                    number_of_pages = ReadInputPDF.getNumberOfPages();
+                    for (int page = 0; page < number_of_pages; ) {
+                        copy.addPage(copy.getImportedPage(ReadInputPDF, ++page));
                     }
                     document.addTitle(title);
                     document.addAuthor(metaAuthor);
@@ -783,7 +780,6 @@ public class add_text extends Fragment {
                     document.addKeywords(metaKeywords);
                     document.addCreator(metaCreator);
                     document.close();
-                    success();
                 }
                 catch (Exception i)
                 {
