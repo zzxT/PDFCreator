@@ -16,3 +16,4 @@ Android application to create and edit Pdf files. Features:
 - Download [Releases](https://github.com/scoute-dich/PDFCreator/releases)
 - Watch [Changelog](https://github.com/scoute-dich/PDFCreator/blob/master/CHANGELOG.md)
 - See [license](https://github.com/scoute-dich/PDFCreator/blob/master/LICENSE.md)
+- Watch [screenshots](https://github.com/scoute-dich/PDFCreator/blob/master/SCREENSHOTS.md)
